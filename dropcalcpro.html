@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DropCalc Pro — Dropshipping Profit Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06090f;--card:#0d1220;--border:#1a2540;--border2:#1f2d4e;
+  --blue:#4f8ef7;--blue-dim:rgba(79,142,247,.12);--blue-b:rgba(79,142,247,.25);
+  --green:#22c55e;--green-dim:rgba(34,197,94,.1);--green-b:rgba(34,197,94,.3);
+  --red:#ef4444;--red-dim:rgba(239,68,68,.1);--red-b:rgba(239,68,68,.3);
+  --amber:#f59e0b;--violet:#a78bfa;--orange:#fb923c;
+  --text:#e2e8f0;--dim:#94a3b8;--muted:#475569;--subtle:#1e2a40;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
+
+/* ── Header ── */
+.hdr{border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;background:rgba(6,9,15,.93);backdrop-filter:blur(14px);z-index:10}
+.logo{display:flex;align-items:center;gap:.65rem}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#4f8ef7,#a78bfa);border-radius:9px;display:grid;place-items:center;font-size:1rem;flex-shrink:0}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.035em}
+.logo-name b{color:var(--blue)}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.cur-sel{font-size:.68rem;font-weight:700;color:var(--dim);background:var(--subtle);border:1px solid var(--border2);padding:.32rem 1.7rem .32rem .65rem;border-radius:7px;cursor:pointer;outline:none;font-family:'Inter',sans-serif;letter-spacing:.02em;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .45rem center;transition:border-color .2s,color .15s}
+.cur-sel:hover{border-color:var(--blue);color:var(--text)}
+.cur-sel option{background:#0d1220;color:var(--text)}
+.live-pill{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--green);background:var(--green-dim);border:1px solid var(--green-b);padding:.28rem .7rem;border-radius:99px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── Layout ── */
+.main{max-width:980px;margin:0 auto;padding:1.5rem 1.25rem 4rem;display:flex;flex-direction:column;gap:1.1rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.4rem}
+.card-title{font-size:.67rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.1rem;display:flex;align-items:center;gap:.45rem}
+.card-title svg{opacity:.55}
+
+/* ── Inputs ── */
+.input-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.875rem}
+.ig{display:flex;flex-direction:column;gap:.35rem}
+.il{font-size:.67rem;font-weight:700;color:var(--dim);letter-spacing:.07em;text-transform:uppercase}
+.iw{position:relative}
+.ip{position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;font-weight:700;pointer-events:none;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
+.iw input{padding-left:1.85rem}
+input[type=number]{width:100%;background:rgba(255,255,255,.035);border:1.5px solid var(--border2);border-radius:10px;padding:.65rem .85rem;color:var(--text);font-size:.95rem;font-weight:600;font-family:'Space Grotesk',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s,background .2s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:hover{border-color:#253660;background:rgba(255,255,255,.05)}
+input[type=number]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,142,247,.14);background:rgba(79,142,247,.05)}
+.np{padding-left:.85rem}
+.card-footer{display:flex;justify-content:flex-end;margin-top:.875rem;padding-top:.875rem;border-top:1px solid var(--border)}
+.btn-clear{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--dim);font-size:.75rem;font-weight:600;padding:.38rem .85rem;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.btn-clear:hover{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.06)}
+
+/* ── Hero ── */
+.hero{border-radius:18px;padding:2.25rem 2rem;text-align:center;border:1px solid var(--border);position:relative;overflow:hidden;transition:background .4s,border-color .4s}
+.hero-neutral{background:var(--card)}
+.hero-profit{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(16,185,129,.04));border-color:var(--green-b)}
+.hero-loss{background:linear-gradient(135deg,rgba(239,68,68,.09),rgba(220,38,38,.04));border-color:var(--red-b)}
+.hero-eye{width:130px;height:130px;border-radius:50%;position:absolute;top:-45px;left:50%;transform:translateX(-50%);filter:blur(55px);opacity:.18;pointer-events:none;transition:background .4s}
+.hero-status{font-size:.67rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem}
+.hero-amount{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,6vw,4rem);font-weight:800;letter-spacing:-.045em;line-height:1;margin:.3rem 0 .875rem}
+.hero-pills{display:flex;justify-content:center;gap:.875rem;flex-wrap:wrap}
+.hero-pill{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:99px;padding:.3rem .9rem;font-size:.78rem}
+.hero-pill span{color:var(--dim)}
+.hero-pill strong{font-weight:700;margin-left:.3rem}
+
+/* ── Stats ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.875rem}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem;border-top:2.5px solid;position:relative;overflow:hidden}
+.stat-val{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.stat-name{font-size:.78rem;font-weight:600;color:var(--dim);margin-top:.3rem}
+.stat-sub{font-size:.67rem;color:var(--muted);margin-top:.1rem}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1rem;text-align:center}
+.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-.03em}
+.kpi-name{font-size:.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-top:.3rem}
+.kpi-tag{font-size:.67rem;font-weight:600;margin-top:.25rem;padding:.15rem .5rem;border-radius:5px;display:inline-block}
+.tag-good{background:rgba(34,197,94,.1);color:var(--green)}
+.tag-warn{background:rgba(245,158,11,.1);color:var(--amber)}
+.tag-bad{background:rgba(239,68,68,.1);color:var(--red)}
+.tag-neutral{background:var(--subtle);color:var(--dim)}
+
+/* ── Two col ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:.875rem}
+.frow{margin-bottom:1rem}.frow:last-child{margin-bottom:0}
+.fmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem}
+.fname{font-size:.82rem;font-weight:500;color:var(--dim)}
+.fval{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700}
+.ftrack{height:8px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+.ffill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.brow{display:flex;justify-content:space-between;align-items:center;padding:.6rem .85rem;border-radius:9px;background:rgba(255,255,255,.03);margin-bottom:.5rem}
+.brow.total{background:var(--blue-dim);border:1px solid var(--blue-b)}
+.blabel{font-size:.82rem;color:var(--dim)}
+.bval{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700}
+.bdiv{height:1px;background:var(--border);margin:.4rem 0}
+.eff-line{font-size:.7rem;color:var(--muted);margin-top:.75rem;line-height:1.55;padding:.6rem .85rem;background:rgba(255,255,255,.02);border-radius:8px;border-left:2px solid var(--border2)}
+
+/* ── Analytics ── */
+.anl-top{display:grid;grid-template-columns:210px 1fr;gap:.875rem;margin-bottom:.875rem}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.5rem 0}
+.gauge-cap{font-size:.72rem;font-weight:600;color:var(--muted);margin-top:.25rem;text-align:center;line-height:1.4}
+.flow-row{margin-bottom:.875rem}.flow-row:last-child{margin-bottom:0}
+.flow-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.flow-name{font-size:.8rem;color:var(--dim);font-weight:500}
+.flow-right{display:flex;align-items:center;gap:.6rem}
+.flow-pct{font-size:.7rem;color:var(--muted);font-family:'Space Grotesk',sans-serif;min-width:60px;text-align:right}
+.flow-val{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700}
+.flow-track{height:9px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+.flow-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── Scale Banner ── */
+.scale-banner{border-radius:14px;padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.875rem;flex-wrap:wrap;border:1px solid}
+.scale-go{background:rgba(34,197,94,.08);border-color:var(--green-b)}
+.scale-wait{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)}
+.scale-stop{background:rgba(239,68,68,.08);border-color:var(--red-b)}
+.scale-left{display:flex;align-items:center;gap:.75rem}
+.scale-icon{font-size:1.75rem;line-height:1}
+.scale-title{font-size:.95rem;font-weight:700;margin-bottom:.15rem}
+.scale-desc{font-size:.75rem;color:var(--dim);line-height:1.4}
+.scale-score-wrap{text-align:center;flex-shrink:0}
+.scale-score{font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:800;line-height:1}
+.scale-score-lbl{font-size:.65rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:.1rem}
+
+/* ── Diagnosis Cards ── */
+.issues-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.issue-card{border-radius:12px;padding:1rem 1.1rem;border:1px solid}
+.issue-crit{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.22)}
+.issue-warn{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.22)}
+.issue-good{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2)}
+.issue-head{display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.4rem}
+.issue-icon{font-size:.95rem;flex-shrink:0;margin-top:.05rem}
+.issue-title{font-size:.82rem;font-weight:700;line-height:1.3}
+.issue-detail{font-size:.75rem;color:var(--dim);line-height:1.5;margin-bottom:.5rem}
+.issue-fix{font-size:.72rem;line-height:1.5;padding:.5rem .65rem;background:rgba(0,0,0,.2);border-radius:7px;border-left:2.5px solid}
+.fix-label{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem}
+
+/* ── Colors ── */
+.c-blue{color:var(--blue)}.c-green{color:var(--green)}.c-red{color:var(--red)}
+.c-amber{color:var(--amber)}.c-violet{color:var(--violet)}.c-orange{color:var(--orange)}
+.c-dim{color:var(--dim)}.c-muted{color:var(--muted)}
+
+.footer{text-align:center;padding:1.25rem 1rem;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;letter-spacing:.02em}
+
+@media(max-width:700px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .anl-top{grid-template-columns:1fr}
+  .issues-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .hero{padding:2rem 1.25rem}
+  .hdr{padding:.875rem 1rem}
+  .hero-amount{font-size:2.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-name">DropCalc<b>Pro</b></div>
+  </div>
+  <div class="hdr-right">
+    <select id="cur-sel" class="cur-sel" onchange="setCur(this.value)">
+      <option value="INR">₹  INR — Indian Rupee</option>
+      <option value="USD">$  USD — US Dollar</option>
+      <option value="PKR">₨  PKR — Pakistani Rupee</option>
+      <option value="GBP">£  GBP — British Pound</option>
+      <option value="EUR">€  EUR — Euro</option>
+      <option value="AED">AED — UAE Dirham</option>
+      <option value="SAR">SAR — Saudi Riyal</option>
+      <option value="BDT">৳  BDT — Bangladeshi Taka</option>
+      <option value="MYR">RM  MYR — Malaysian Ringgit</option>
+      <option value="TRY">₺  TRY — Turkish Lira</option>
+    </select>
+    <div class="live-pill"><div class="live-dot"></div>Live</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="card">
+    <div class="card-title">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      Campaign Data
+    </div>
+    <div class="input-grid">
+      <div class="ig">
+        <label class="il">Sourcing Cost</label>
+        <div class="iw"><span class="ip" id="pfx-cpp">₹</span><input type="number" id="cpp" placeholder="0.00" min="0" step="0.01" oninput="calc()"></div>
+      </div>
+      <div class="ig">
+        <label class="il">Selling Price</label>
+        <div class="iw"><span class="ip" id="pfx-sp">₹</span><input type="number" id="sp" placeholder="0.00" min="0" step="0.01" oninput="calc()"></div>
+      </div>
+      <div class="ig">
+        <label class="il">Total Orders</label>
+        <input type="number" id="tot" placeholder="0" min="0" class="np" oninput="calc()">
+      </div>
+      <div class="ig">
+        <label class="il">Confirmed Orders</label>
+        <input type="number" id="cno" placeholder="0" min="0" class="np" oninput="calc()">
+      </div>
+      <div class="ig">
+        <label class="il">Delivered Orders</label>
+        <input type="number" id="dlv" placeholder="0" min="0" class="np" oninput="calc()">
+      </div>
+      <div class="ig">
+        <label class="il">FB Ads Spend / Order</label>
+        <div class="iw"><span class="ip" id="pfx-fb">₹</span><input type="number" id="fb" placeholder="0.00" min="0" step="0.01" oninput="calc()"></div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="btn-clear" onclick="rst()">✕ Clear All</button>
+    </div>
+  </div>
+
+  <div class="hero hero-neutral" id="hero">
+    <div class="hero-eye" id="hero-eye" style="background:var(--dim)"></div>
+    <div class="hero-status c-muted" id="hl">ENTER YOUR CAMPAIGN DATA</div>
+    <div class="hero-amount c-muted" id="ha" style="font-family:'Space Grotesk',sans-serif">— 0</div>
+    <div class="hero-pills">
+      <div class="hero-pill"><span>Margin</span><strong class="c-muted" id="hm">—</strong></div>
+      <div class="hero-pill"><span>Per Delivered Order</span><strong class="c-muted" id="ho">—</strong></div>
+      <div class="hero-pill"><span>Total Orders</span><strong class="c-muted" id="ht">—</strong></div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat" style="border-top-color:var(--blue)">
+      <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--blue);border-radius:50%;opacity:.06;filter:blur(20px)"></div>
+      <div class="stat-val c-blue" id="rev">—</div>
+      <div class="stat-name">Total Revenue</div>
+      <div class="stat-sub">Delivered × Selling Price</div>
+    </div>
+    <div class="stat" style="border-top-color:var(--orange)">
+      <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--orange);border-radius:50%;opacity:.06;filter:blur(20px)"></div>
+      <div class="stat-val c-orange" id="cgs">—</div>
+      <div class="stat-name">Sourcing Cost</div>
+      <div class="stat-sub">Delivered × Sourcing Cost</div>
+    </div>
+    <div class="stat" style="border-top-color:var(--violet)">
+      <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--violet);border-radius:50%;opacity:.06;filter:blur(20px)"></div>
+      <div class="stat-val c-violet" id="ads">—</div>
+      <div class="stat-name">FB Ads Total</div>
+      <div class="stat-sub">All Orders × Ads/Order</div>
+    </div>
+    <div class="stat" style="border-top-color:var(--amber)">
+      <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--amber);border-radius:50%;opacity:.06;filter:blur(20px)"></div>
+      <div class="stat-val c-dim" id="gro">—</div>
+      <div class="stat-name">Gross Profit</div>
+      <div class="stat-sub">Revenue − Sourcing Cost</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-val c-dim" id="vri">—</div><div class="kpi-name">ROI</div><div class="kpi-tag tag-neutral" id="tri">Net profit / ads</div></div>
+    <div class="kpi"><div class="kpi-val c-dim" id="vrs">—</div><div class="kpi-name">ROAS</div><div class="kpi-tag tag-neutral" id="trs">Revenue / ads</div></div>
+    <div class="kpi"><div class="kpi-val c-dim" id="vdr">—</div><div class="kpi-name">Delivery Rate</div><div class="kpi-tag tag-neutral" id="tdr">Delivered / total</div></div>
+    <div class="kpi"><div class="kpi-val c-dim" id="vcr">—</div><div class="kpi-name">Confirm Rate</div><div class="kpi-tag tag-neutral" id="tcr">Confirmed / total</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Order Funnel
+      </div>
+      <div class="frow"><div class="fmeta"><span class="fname">Total orders</span><span class="fval c-blue" id="ftt">0 (100%)</span></div><div class="ftrack"><div class="ffill" id="fti" style="width:100%;background:var(--blue)"></div></div></div>
+      <div class="frow"><div class="fmeta"><span class="fname">Confirmed orders</span><span class="fval c-amber" id="fct">0 (0%)</span></div><div class="ftrack"><div class="ffill" id="fci" style="width:0%;background:var(--amber)"></div></div></div>
+      <div class="frow"><div class="fmeta"><span class="fname">Delivered orders</span><span class="fval c-green" id="fdt">0 (0%)</span></div><div class="ftrack"><div class="ffill" id="fdi" style="width:0%;background:var(--green)"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="m8 21 4-4 4 4"/></svg>
+        Per Order Math
+      </div>
+      <div class="brow"><span class="blabel">Selling price</span><span class="bval c-blue" id="bsp">—</span></div>
+      <div class="brow"><span class="blabel">− Sourcing cost</span><span class="bval c-orange" id="bcp">—</span></div>
+      <div class="brow"><span class="blabel">− FB ads per order</span><span class="bval c-violet" id="bfb">—</span></div>
+      <div class="bdiv"></div>
+      <div class="brow total"><span class="blabel" style="color:var(--text);font-weight:600">= Profit per order</span><span class="bval c-dim" id="bsm">—</span></div>
+      <div class="eff-line">Effective profit / delivered order (all costs accounted): <strong id="bef" class="c-dim">—</strong></div>
+    </div>
+  </div>
+
+  <!-- ─── Analytics (shown when data is entered) ─── -->
+  <div id="anl-wrap" style="display:none">
+
+    <div class="scale-banner scale-stop" id="scale-banner">
+      <div class="scale-left">
+        <div class="scale-icon" id="scale-icon">📊</div>
+        <div>
+          <div class="scale-title" id="scale-title">Awaiting campaign data</div>
+          <div class="scale-desc" id="scale-desc">Fill in your numbers above to get the verdict</div>
+        </div>
+      </div>
+      <div class="scale-score-wrap">
+        <div class="scale-score c-dim" id="scale-score">—</div>
+        <div class="scale-score-lbl">Health Score</div>
+      </div>
+    </div>
+
+    <div class="anl-top">
+      <div class="card">
+        <div class="card-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m12 8 4 4-4 4"/><path d="M8 12h7"/></svg>
+          Campaign Health
+        </div>
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 200 120" width="178" style="overflow:visible">
+            <path d="M 18 105 A 82 82 0 0 1 182 105" fill="none" stroke="#1a2540" stroke-width="14" stroke-linecap="round"/>
+            <path id="g-fill" d="M 18 105 A 82 82 0 0 1 182 105" fill="none" stroke="#475569" stroke-width="14" stroke-linecap="round" style="stroke-dasharray:257.6;stroke-dashoffset:257.6;transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1),stroke .4s"/>
+            <text id="g-score" x="100" y="96" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="36" font-weight="800" fill="#475569">—</text>
+            <text x="100" y="113" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#475569">/ 100</text>
+          </svg>
+          <div class="gauge-cap" id="g-label">Enter data to see score</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Revenue Flow — Where Does the Money Go?
+        </div>
+        <div class="flow-row">
+          <div class="flow-meta"><span class="flow-name">Revenue (100%)</span><div class="flow-right"><span class="flow-val c-blue" id="fl-rev">—</span></div></div>
+          <div class="flow-track"><div class="flow-fill" style="width:100%;background:var(--blue)"></div></div>
+        </div>
+        <div class="flow-row">
+          <div class="flow-meta"><span class="flow-name">− Sourcing Cost</span><div class="flow-right"><span class="flow-pct" id="fp-cogs">—</span><span class="flow-val c-orange" id="fl-cogs">—</span></div></div>
+          <div class="flow-track"><div class="flow-fill" id="ff-cogs" style="width:0%;background:var(--orange)"></div></div>
+        </div>
+        <div class="flow-row">
+          <div class="flow-meta"><span class="flow-name">− FB Ads Total</span><div class="flow-right"><span class="flow-pct" id="fp-ads">—</span><span class="flow-val c-violet" id="fl-ads">—</span></div></div>
+          <div class="flow-track"><div class="flow-fill" id="ff-ads" style="width:0%;background:var(--violet)"></div></div>
+        </div>
+        <div class="flow-row" style="margin-bottom:0">
+          <div class="flow-meta"><span class="flow-name">= Net Profit / Loss</span><div class="flow-right"><span class="flow-pct" id="fp-net">—</span><span class="flow-val c-dim" id="fl-net">—</span></div></div>
+          <div class="flow-track"><div class="flow-fill" id="ff-net" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Campaign Diagnostics &amp; Action Plan
+      </div>
+      <div class="issues-grid" id="issues-list"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">⚡ DropCalcPro &nbsp;·&nbsp; Your Dropshipping Command Center</footer>
+
+<script>
+const CURR={
+  INR:{sym:'₹',loc:'en-IN',pad:'1.85rem'},
+  USD:{sym:'$',loc:'en-US',pad:'1.65rem'},
+  PKR:{sym:'₨',loc:'en-PK',pad:'1.85rem'},
+  GBP:{sym:'£',loc:'en-GB',pad:'1.8rem'},
+  EUR:{sym:'€',loc:'de-DE',pad:'1.85rem'},
+  AED:{sym:'AED',loc:'en-AE',pad:'3rem'},
+  SAR:{sym:'SAR',loc:'ar-SA',pad:'3rem'},
+  BDT:{sym:'৳',loc:'bn-BD',pad:'1.85rem'},
+  MYR:{sym:'RM',loc:'ms-MY',pad:'2.3rem'},
+  TRY:{sym:'₺',loc:'tr-TR',pad:'1.85rem'},
+};
+let CUR=CURR.INR, score=0;
+
+const gv=id=>parseFloat(document.getElementById(id).value)||0;
+const gi=id=>parseInt(document.getElementById(id).value)||0;
+const fm=n=>{const s=CUR.sym,sp=s.length>1?' ':'';return s+sp+Math.abs(n).toLocaleString(CUR.loc,{maximumFractionDigits:0})};
+const fd=(n,d)=>{d=d||1;return Math.abs(n).toLocaleString(CUR.loc,{minimumFractionDigits:d,maximumFractionDigits:d})};
+const st=(id,t)=>document.getElementById(id).textContent=t;
+const cc=(id,cls)=>{
+  const e=document.getElementById(id);
+  const keep=e.className.split(' ').filter(c=>!['c-blue','c-green','c-red','c-amber','c-violet','c-orange','c-dim','c-muted'].includes(c));
+  e.className=keep.join(' ').replace(/\s+/,' ').trim();
+  if(cls)e.classList.add('c-'+cls);
+};
+const setTag=(id,txt,type)=>{const e=document.getElementById(id);e.textContent=txt;e.className='kpi-tag tag-'+type};
+
+function setCur(code){
+  CUR=CURR[code]||CURR.INR;
+  ['pfx-cpp','pfx-sp','pfx-fb'].forEach(id=>st(id,CUR.sym));
+  document.querySelectorAll('.iw input').forEach(el=>el.style.paddingLeft=CUR.pad);
+  calc();
+}
+
+function rst(){
+  ['cpp','sp','tot','cno','dlv','fb'].forEach(id=>{document.getElementById(id).value=''});
+  calc();
+}
+
+function healthScore(dr,cr,roas,mg){
+  let s=0;
+  s+=dr>=60?30:dr>=50?24:dr>=40?16:dr>=30?8:0;
+  s+=cr>=70?25:cr>=55?20:cr>=40?12:cr>=25?5:0;
+  s+=roas>=3?25:roas>=2?18:roas>=1.5?12:roas>=1?6:0;
+  s+=mg>=20?20:mg>=10?15:mg>=5?8:mg>=0?3:0;
+  return Math.round(s);
+}
+
+function updateGauge(sc,has){
+  const circ=257.6;
+  const f=document.getElementById('g-fill');
+  const t=document.getElementById('g-score');
+  const l=document.getElementById('g-label');
+  if(!has){f.style.strokeDashoffset=circ;t.textContent='—';t.setAttribute('fill','#475569');l.textContent='Enter data to see score';return;}
+  const clr=sc>=70?'#22c55e':sc>=40?'#f59e0b':'#ef4444';
+  f.style.strokeDashoffset=circ*(1-sc/100);f.style.stroke=clr;
+  t.textContent=sc;t.setAttribute('fill',clr);
+  l.textContent=sc>=70?'Healthy — ready to grow':sc>=40?'Average — optimize first':'Critical — fix issues now';
+}
+
+function updateBanner(sc,net,has){
+  const b=document.getElementById('scale-banner');
+  b.className='scale-banner';
+  if(!has){b.classList.add('scale-stop');st('scale-icon','📊');st('scale-title','Awaiting campaign data');st('scale-desc','Fill in your numbers above to get the verdict');const ss=document.getElementById('scale-score');ss.textContent='—';ss.className='scale-score c-dim';return;}
+  const ss=document.getElementById('scale-score');
+  ss.textContent=sc;
+  if(sc>=70&&net>=0){b.classList.add('scale-go');st('scale-icon','🚀');st('scale-title','Scale Ready — Increase Your Ad Budget!');st('scale-desc','Strong health score. Consider scaling ad spend by 20-30% this week.');ss.className='scale-score c-green';}
+  else if(sc>=45){b.classList.add('scale-wait');st('scale-icon','⚡');st('scale-title','Optimize First — Fix Issues Before Scaling');st('scale-desc','Fixable issues detected. Resolve them before increasing budget or you\'ll multiply problems.');ss.className='scale-score c-amber';}
+  else{b.classList.add('scale-stop');st('scale-icon','⛔');st('scale-title','Stop Scaling — Campaign Needs Restructuring');st('scale-desc','Critical problems detected. Scaling now will only multiply your losses.');ss.className='scale-score c-red';}
+}
+
+function buildIssues(d){
+  const {sp,cpp,tot,con,dlv,rev,cogs,ads,gros,net,roi,roas,dr,cr}=d;
+  const issues=[];
+  const markup=sp>0?((sp-cpp)/sp)*100:0;
+  const rtoRate=con>0?((con-dlv)/con)*100:0;
+
+  if(tot>0){
+    if(cr<35)
+      issues.push({s:'crit',i:'🚨',t:'Critical Confirmation Rate',d:'Only '+fd(cr)+'% of orders confirmed. Industry average is 50-60%. Most leads are dropping off.',f:'Review your product listing and pricing. Ensure no mismatch between ad promise and product page. Retrain your call team on objection handling.'});
+    else if(cr<50)
+      issues.push({s:'warn',i:'⚠️',t:'Low Confirmation Rate',d:fd(cr)+'% is below average. You\'re losing orders that could have been confirmed.',f:'Improve call timing (within 2 hrs of order), use WhatsApp follow-ups, simplify the checkout flow, and A/B test your product page headline.'});
+    else
+      issues.push({s:'good',i:'✅',t:'Strong Confirmation Rate',d:fd(cr)+'% — above industry average. Customers trust and want your product.',f:''});
+
+    if(dr<30)
+      issues.push({s:'crit',i:'🚨',t:'Critical Delivery Rate — High RTO',d:'Only '+fd(dr)+'% delivered. You\'re losing 70%+ to RTO (Return to Origin). This is destroying profitability.',f:'Urgently verify courier partner performance by region. Add pre-delivery confirmation calls/SMS. Consider switching courier for problem zones. Reduce fake COD orders with address verification.'});
+    else if(dr<45)
+      issues.push({s:'warn',i:'⚠️',t:'Below Average Delivery Rate',d:fd(dr)+'% delivery rate is hurting your margins. Target is 50%+.',f:'Switch to better courier partners, add pre-delivery SMS reminders, and use narrow targeting to reduce low-intent COD orders.'});
+    else if(dr>=55)
+      issues.push({s:'good',i:'✅',t:'Great Delivery Rate',d:fd(dr)+'% — well above average. Your logistics setup is strong.',f:''});
+
+    if(con>0&&rtoRate>35&&dlv>0)
+      issues.push({s:'warn',i:'📦',t:'High Post-Confirmation RTO',d:fd(rtoRate)+'% of confirmed orders are being returned before or after delivery attempt.',f:'Add a pre-delivery call 1-2 hours before arrival. Use open-box delivery for high-value items. Partner with couriers that offer 3+ delivery attempts.'});
+  }
+
+  if(sp>0&&cpp>0){
+    if(markup<60)
+      issues.push({s:'crit',i:'💸',t:'Dangerously Low Product Markup',d:'Your markup is only '+fd(markup)+'%. COD dropshipping requires 150%+ markup to absorb RTO losses, ads cost, and logistics.',f:'Either source a cheaper supplier, negotiate bulk pricing, increase the selling price, or switch to a higher-margin product. This is a structural problem.'});
+    else if(markup<120)
+      issues.push({s:'warn',i:'💰',t:'Thin Product Margin',d:fd(markup)+'% markup is tight. After RTO losses and ad costs, margins shrink fast.',f:'Target 150%+ markup. Consider product bundles, upsells at checkout, or a higher-priced variant to improve average order value.'});
+    else
+      issues.push({s:'good',i:'✅',t:'Healthy Product Markup',d:fd(markup)+'% markup — solid foundation to cover ads and RTO losses.',f:''});
+  }
+
+  if(ads>0){
+    if(roas<1)
+      issues.push({s:'crit',i:'🔥',t:'ROAS Below 1x — Burning Cash on Every Click',d:'For every '+CUR.sym+'1 spent on ads you only get '+CUR.sym+fd(roas,2)+' back in revenue. You\'re losing money before product costs.',f:'Pause ads immediately. Do not scale. Test completely new creatives, audiences, and landing pages. The ad funnel is fundamentally broken.'});
+    else if(roas<2)
+      issues.push({s:'warn',i:'📉',t:'Low ROAS — Not Enough to Be Profitable',d:fd(roas,2)+'x ROAS. You need 3x+ for COD dropshipping to cover product cost, RTO losses, and logistics.',f:'A/B test ad creatives aggressively, narrow audience to high-intent buyers, and optimize your landing page CTA and headline.'});
+    else if(roas>=3)
+      issues.push({s:'good',i:'🔥',t:'Excellent ROAS',d:fd(roas,2)+'x — strong ad efficiency. Each '+CUR.sym+'1 spent returns '+CUR.sym+fd(roas,2)+' in revenue.',f:''});
+
+    if(ads>gros&&gros>0)
+      issues.push({s:'crit',i:'📊',t:'Ad Spend Exceeds Gross Profit',d:'Your FB ads cost is higher than what you earn after product cost. Every delivered order runs at a loss.',f:'Reduce CPO by tightening audience targeting, or dramatically improve delivery rate to generate more revenue per ad rupee spent.'});
+  }
+
+  if(tot>0){
+    if(net<0)
+      issues.push({s:'crit',i:'⛔',t:'Net Loss — Do Not Scale This Campaign',d:'You are losing '+fm(Math.abs(net))+' overall. The three core problems in COD dropshipping are low delivery rate, thin markup, and high CPO.',f:'Systematically fix: (1) Lower product sourcing cost, (2) Improve delivery rate by 10-15%, (3) Reduce FB ads CPO. Fix all three before spending another rupee on ads.'});
+    else if(net>0&&score>=70)
+      issues.push({s:'good',i:'🚀',t:'Profitable & Healthy — Scale Now',d:'Generating '+fm(net)+' net profit with a health score of '+score+'/100. All key metrics are in the green.',f:''});
+  }
+
+  return issues;
+}
+
+function calc(){
+  const cpp=gv('cpp'),sp=gv('sp'),tot=gi('tot'),con=gi('cno'),dlv=gi('dlv'),fb=gv('fb');
+  const rev=dlv*sp,cogs=dlv*cpp,ads=tot*fb,gros=rev-cogs,net=gros-ads;
+  const mg=rev>0?(net/rev)*100:0;
+  const roi=ads>0?(net/ads)*100:0,roas=ads>0?rev/ads:0;
+  const dr=tot>0?(dlv/tot)*100:0,cr=tot>0?(con/tot)*100:0;
+  const spo=sp-cpp-fb,epo=dlv>0?net/dlv:0;
+  const has=tot>0||dlv>0;
+  score=has?healthScore(dr,cr,roas,mg):0;
+
+  const h=document.getElementById('hero'),eye=document.getElementById('hero-eye');
+  h.className='hero';
+  if(!has){
+    h.classList.add('hero-neutral');eye.style.background='var(--dim)';
+    cc('hl','muted');st('hl','ENTER YOUR CAMPAIGN DATA');
+    cc('ha','muted');st('ha','— 0');
+    cc('hm','muted');st('hm','—');cc('ho','muted');st('ho','—');cc('ht','muted');st('ht','—');
+  }else if(net>=0){
+    h.classList.add('hero-profit');eye.style.background='var(--green)';
+    cc('hl','green');st('hl','🚀 NET PROFIT — YOU\'RE IN THE GREEN!');
+    cc('ha','green');st('ha',fm(net));
+    cc('hm','green');st('hm',fd(mg)+'%');cc('ho','green');st('ho',fm(epo));cc('ht','green');st('ht',tot+' orders');
+  }else{
+    h.classList.add('hero-loss');eye.style.background='var(--red)';
+    cc('hl','red');st('hl','⚠️ NET LOSS — TIME TO OPTIMIZE!');
+    cc('ha','red');st('ha','−'+fm(net));
+    cc('hm','red');st('hm',fd(Math.abs(mg))+'% loss');cc('ho','red');st('ho','−'+fm(Math.abs(epo)));cc('ht','red');st('ht',tot+' orders');
+  }
+
+  st('rev',fm(rev));st('cgs',fm(cogs));st('ads',fm(ads));
+  const ge=document.getElementById('gro');ge.textContent=(gros<0?'−':'')+fm(Math.abs(gros));cc('gro',gros>=0?'green':'red');
+
+  if(ads>0){
+    const rv=document.getElementById('vri');rv.textContent=(roi<0?'−':'')+fd(Math.abs(roi))+'%';rv.className='kpi-val '+(roi>=0?'c-green':'c-red');
+    setTag('tri',roi>=100?'✅ Excellent':roi>=50?'⚡ Good':roi>=0?'⚡ Positive':'❌ Negative',roi>=0?'good':'bad');
+    const rv2=document.getElementById('vrs');rv2.textContent=fd(roas)+'x';rv2.className='kpi-val '+(roas>=2?'c-green':roas>=1?'c-amber':'c-red');
+    setTag('trs',roas>=3?'🔥 Scale ready':roas>=2?'✅ Good ROAS':roas>=1?'⚠️ Break-even':'❌ Below 1x',roas>=2?'good':roas>=1?'warn':'bad');
+  }else{
+    ['vri','vrs'].forEach(id=>{document.getElementById(id).className='kpi-val c-dim';document.getElementById(id).textContent='—'});
+    setTag('tri','Add ads spend','neutral');setTag('trs','Add ads spend','neutral');
+  }
+  if(tot>0){
+    const dv=document.getElementById('vdr');dv.textContent=fd(dr)+'%';dv.className='kpi-val '+(dr>=50?'c-green':dr>=35?'c-amber':'c-red');
+    setTag('tdr',dr>=60?'🔥 Excellent':dr>=40?'✅ Good':dr>=25?'⚠️ Average':'❌ Low rate',dr>=50?'good':dr>=35?'warn':'bad');
+    const cv=document.getElementById('vcr');cv.textContent=fd(cr)+'%';cv.className='kpi-val '+(cr>=60?'c-green':cr>=40?'c-amber':'c-red');
+    setTag('tcr',cr>=70?'🔥 Excellent':cr>=50?'✅ Good':cr>=35?'⚠️ Average':'❌ Low rate',cr>=60?'good':cr>=40?'warn':'bad');
+  }else{
+    ['vdr','vcr'].forEach(id=>{document.getElementById(id).className='kpi-val c-dim';document.getElementById(id).textContent='—'});
+    setTag('tdr','Delivered / total','neutral');setTag('tcr','Confirmed / total','neutral');
+  }
+
+  const cp=tot>0?(con/tot*100):0,dp=tot>0?(dlv/tot*100):0;
+  st('ftt',tot+' (100%)');st('fct',con+' ('+fd(cp)+'%)');st('fdt',dlv+' ('+fd(dp)+'%)');
+  document.getElementById('fci').style.width=cp+'%';document.getElementById('fdi').style.width=dp+'%';
+
+  const pfx=CUR.sym+(CUR.sym.length>1?' ':'');
+  st('bsp',pfx+fd(sp,2));st('bcp','−'+pfx+fd(cpp,2));st('bfb','−'+pfx+fd(fb,2));
+  const se=document.getElementById('bsm');se.textContent=(spo<0?'−':'')+pfx+fd(Math.abs(spo),2);se.className='bval '+(spo>=0?'c-green':'c-red');
+  const ee=document.getElementById('bef');ee.textContent=(epo<0?'−':'')+pfx+fd(Math.abs(epo),2);ee.className=epo>=0?'c-green':'c-red';
+
+  document.getElementById('anl-wrap').style.display=has?'block':'none';
+  if(has){
+    updateGauge(score,has);
+    updateBanner(score,net,has);
+    const cogsP=rev>0?(cogs/rev*100):0, adsP=rev>0?(ads/rev*100):0, netP=rev>0?(Math.abs(net)/rev*100):0;
+    st('fl-rev',fm(rev));
+    st('fl-cogs',fm(cogs));st('fp-cogs',fd(cogsP)+'% of rev');document.getElementById('ff-cogs').style.width=Math.min(cogsP,100)+'%';
+    st('fl-ads',fm(ads));st('fp-ads',fd(adsP)+'% of rev');document.getElementById('ff-ads').style.width=Math.min(adsP,100)+'%';
+    const ne=document.getElementById('fl-net');ne.textContent=(net<0?'−':'')+fm(net);ne.className='flow-val '+(net>=0?'c-green':'c-red');
+    st('fp-net',fd(netP)+'% of rev');
+    const nf=document.getElementById('ff-net');nf.style.width=Math.min(netP,100)+'%';nf.style.background=net>=0?'var(--green)':'var(--red)';
+
+    const issues=buildIssues({sp,cpp,tot,con,dlv,rev,cogs,ads,gros,net,roi,roas,dr,cr,spo});
+    const grid=document.getElementById('issues-list');
+    if(!issues.length){grid.innerHTML='<div style="color:var(--dim);font-size:.82rem;padding:.25rem">No issues detected — campaign looks healthy across all metrics.</div>';return;}
+    grid.innerHTML=issues.map(({s,i,t,d,f})=>{
+      const cc2=s==='crit'?'issue-crit':s==='warn'?'issue-warn':'issue-good';
+      const tc=s==='crit'?'var(--red)':s==='warn'?'var(--amber)':'var(--green)';
+      return '<div class="issue-card '+cc2+'"><div class="issue-head"><span class="issue-icon">'+i+'</span><span class="issue-title" style="color:'+tc+'">'+t+'</span></div><div class="issue-detail">'+d+'</div>'+(f?'<div class="issue-fix" style="border-left-color:'+tc+'"><div class="fix-label" style="color:'+tc+'">Action Plan</div>'+f+'</div>':'')+'</div>';
+    }).join('');
+  }
+}
+calc();
+</script>
+</body>
+</html>
