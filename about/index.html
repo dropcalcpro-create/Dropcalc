@@ -1,42 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — DropCalc Pro</title>
+<meta name="description" content="DropCalc Pro is the intelligent dropshipping profit calculator built for modern e-commerce operators. Learn our story, mission, and the values that drive us.">
+<meta name="keywords" content="dropshipping calculator, profit calculator, e-commerce tools, COD dropshipping, ROAS calculator, dropshipping analytics">
+<meta name="author" content="DropCalc Pro">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="About — DropCalc Pro">
+<meta property="og:description" content="The story behind the most advanced dropshipping profit calculator on the market.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dropcalc.pro/about/">
+<meta property="og:image" content="https://dropcalc.pro/og-about.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About — DropCalc Pro">
+<meta name="twitter:description" content="Built by operators, for operators. The story behind DropCalc Pro.">
+<link rel="canonical" href="https://dropcalc.pro/about/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06090f;--card:#0d1220;--border:#1a2540;--border2:#1f2d4e;
+  --blue:#4f8ef7;--blue-dim:rgba(79,142,247,.12);--blue-b:rgba(79,142,247,.25);
+  --green:#22c55e;--green-dim:rgba(34,197,94,.1);--green-b:rgba(34,197,94,.3);
+  --red:#ef4444;--red-dim:rgba(239,68,68,.1);--red-b:rgba(239,68,68,.3);
+  --amber:#f59e0b;--violet:#a78bfa;--orange:#fb923c;
+  --text:#e2e8f0;--dim:#94a3b8;--muted:#475569;--subtle:#1e2a40;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
 
-    <title>About DropCalcPro</title>
+/* ── Header ── */
+.hdr{border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;background:rgba(6,9,15,.93);backdrop-filter:blur(14px);z-index:10}
+.logo{display:flex;align-items:center;gap:.65rem}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#4f8ef7,#a78bfa);border-radius:9px;display:grid;place-items:center;font-size:1rem;flex-shrink:0}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.035em}
+.logo-name b{color:var(--blue)}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.cur-sel{font-size:.68rem;font-weight:700;color:var(--dim);background:var(--subtle);border:1px solid var(--border2);padding:.32rem 1.7rem .32rem .65rem;border-radius:7px;cursor:pointer;outline:none;font-family:'Inter',sans-serif;letter-spacing:.02em;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .45rem center;transition:border-color .2s,color .15s}
+.cur-sel:hover{border-color:var(--blue);color:var(--text)}
+.cur-sel option{background:#0d1220;color:var(--text)}
+.live-pill{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--green);background:var(--green-dim);border:1px solid var(--green-b);padding:.28rem .7rem;border-radius:99px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
-    <meta name="description" content="Learn about DropCalcPro, a free platform built to help dropshippers calculate profits, ROAS, margins, and make smarter business decisions.">
+/* ── Layout ── */
+.main{max-width:980px;margin:0 auto;padding:1.5rem 1.25rem 4rem;display:flex;flex-direction:column;gap:1.1rem}
 
-    <link rel="canonical" href="https://dropcalcpro.in/about/">
+/* ── Typography ── */
+.h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,5.5vw,3.6rem);font-weight:800;letter-spacing:-.045em;line-height:1.05;color:var(--text)}
+.h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;color:var(--text)}
+.h3{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.2;color:var(--text)}
+.lead{font-size:clamp(1rem,2vw,1.15rem);color:var(--dim);line-height:1.7;max-width:640px}
+.body{color:var(--dim);font-size:.95rem;line-height:1.75}
+.label{font-size:.65rem;font-weight:700;color:var(--blue);letter-spacing:.12em;text-transform:uppercase}
+
+/* ── Hero ── */
+.about-hero{text-align:center;padding:4rem 1.5rem 3rem;position:relative;overflow:hidden}
+.about-hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse at center,rgba(79,142,247,.08) 0%,transparent 70%);pointer-events:none}
+.about-hero .label{margin-bottom:1rem}
+.about-hero .h1{margin-bottom:1.25rem}
+.about-hero .lead{margin:0 auto}
+
+/* ── Section base ── */
+.section{padding:2.5rem 0}
+.section-header{margin-bottom:2rem}
+.section-header .label{margin-bottom:.6rem}
+.section-header .h2{margin-bottom:.5rem}
+
+/* ── Our Story ── */
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center}
+.story-visual{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--card);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
+.story-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,142,247,.06),rgba(167,139,250,.04));pointer-events:none}
+.story-visual-inner{text-align:center;padding:2rem}
+.story-visual-inner .story-num{font-family:'Space Grotesk',sans-serif;font-size:4rem;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.story-visual-inner .story-num-label{font-size:.75rem;color:var(--muted);margin-top:.25rem;letter-spacing:.05em}
+.story-body .body{margin-bottom:1rem}
+.story-body .body:last-child{margin-bottom:0}
+.story-highlight{display:inline-flex;align-items:center;gap:.4rem;background:var(--blue-dim);border:1px solid var(--blue-b);color:var(--blue);padding:.35rem .7rem;border-radius:8px;font-size:.72rem;font-weight:600;margin-top:1rem}
+
+/* ── Mission ── */
+.mission-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.mission-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--blue),var(--violet));opacity:.6}
+.mission-card::after{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(79,142,247,.1) 0%,transparent 70%);pointer-events:none}
+.mission-card .label{margin-bottom:1rem}
+.mission-card .h2{margin-bottom:1rem;max-width:600px;margin-left:auto;margin-right:auto}
+.mission-card .lead{margin:0 auto;color:var(--dim)}
+
+/* ── Why Exists ── */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.why-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.why-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .3s}
+.why-card:nth-child(1)::before{background:var(--blue)}
+.why-card:nth-child(2)::before{background:var(--green)}
+.why-card:nth-child(3)::before{background:var(--violet)}
+.why-card:hover::before{opacity:1}
+.why-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:1.1rem;margin-bottom:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border2)}
+.why-card:nth-child(1) .why-icon{color:var(--blue)}
+.why-card:nth-child(2) .why-icon{color:var(--green)}
+.why-card:nth-child(3) .why-icon{color:var(--violet)}
+.why-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem;letter-spacing:-.02em}
+.why-desc{font-size:.82rem;color:var(--dim);line-height:1.6}
+
+/* ── Core Values ── */
+.values-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.875rem}
+.value-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color .3s}
+.value-card:hover{border-color:var(--border2)}
+.value-idx{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:var(--blue);opacity:.25;line-height:1;flex-shrink:0;min-width:28px}
+.value-content{flex:1}
+.value-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.25rem;letter-spacing:-.02em}
+.value-desc{font-size:.8rem;color:var(--dim);line-height:1.6}
+
+/* ── Feature Cards ── */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.875rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.feature-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.feature-card::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;opacity:.04;filter:blur(25px);pointer-events:none}
+.feature-card:nth-child(1)::after{background:var(--blue)}
+.feature-card:nth-child(2)::after{background:var(--green)}
+.feature-card:nth-child(3)::after{background:var(--violet)}
+.feature-card:nth-child(4)::after{background:var(--orange)}
+.feature-card:nth-child(5)::after{background:var(--red)}
+.feature-card:nth-child(6)::after{background:var(--amber)}
+.feature-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:1.15rem;margin-bottom:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border2)}
+.feature-card:nth-child(1) .feature-icon{color:var(--blue)}
+.feature-card:nth-child(2) .feature-icon{color:var(--green)}
+.feature-card:nth-child(3) .feature-icon{color:var(--violet)}
+.feature-card:nth-child(4) .feature-icon{color:var(--orange)}
+.feature-card:nth-child(5) .feature-icon{color:var(--red)}
+.feature-card:nth-child(6) .feature-icon{color:var(--amber)}
+.feature-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.35rem;letter-spacing:-.02em}
+.feature-desc{font-size:.8rem;color:var(--dim);line-height:1.6}
+
+/* ── Roadmap ── */
+.roadmap-wrap{position:relative;padding-left:2rem}
+.roadmap-wrap::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(to bottom,var(--blue),var(--violet));border-radius:99px;opacity:.3}
+.roadmap-item{position:relative;padding-bottom:2rem}
+.roadmap-item:last-child{padding-bottom:0}
+.roadmap-dot{position:absolute;left:-2rem;top:4px;width:16px;height:16px;border-radius:50%;background:var(--card);border:2px solid var(--blue);display:grid;place-items:center}
+.roadmap-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.roadmap-item.done .roadmap-dot{border-color:var(--green)}
+.roadmap-item.done .roadmap-dot::after{background:var(--green)}
+.roadmap-item.future .roadmap-dot{border-color:var(--border2)}
+.roadmap-item.future .roadmap-dot::after{background:var(--border2)}
+.roadmap-meta{display:flex;align-items:center;gap:.6rem;margin-bottom:.35rem}
+.roadmap-tag{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.15rem .5rem;border-radius:5px}
+.tag-shipped{background:var(--green-dim);color:var(--green);border:1px solid var(--green-b)}
+.tag-building{background:rgba(79,142,247,.1);color:var(--blue);border:1px solid var(--blue-b)}
+.tag-planned{background:var(--subtle);color:var(--dim);border:1px solid var(--border2)}
+.roadmap-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.2rem;letter-spacing:-.02em}
+.roadmap-desc{font-size:.82rem;color:var(--dim);line-height:1.6}
+
+/* ── CTA ── */
+.cta-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:3rem 2rem;text-align:center;position:relative;overflow:hidden}
+.cta-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--blue),var(--violet));opacity:.6}
+.cta-card::after{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:400px;height:250px;background:radial-gradient(ellipse at center,rgba(79,142,247,.1) 0%,transparent 70%);pointer-events:none}
+.cta-card .h2{margin-bottom:.75rem;position:relative;z-index:1}
+.cta-card .lead{margin:0 auto 1.5rem;position:relative;z-index:1}
+.cta-btn{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;padding:.85rem 1.8rem;border-radius:12px;border:none;cursor:pointer;position:relative;z-index:1;transition:transform .2s,box-shadow .2s;text-decoration:none}
+.cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(79,142,47,.2)}
+.cta-btn-secondary{display:inline-flex;align-items:center;gap:.5rem;background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;padding:.85rem 1.8rem;border-radius:12px;border:1.5px solid var(--border2);cursor:pointer;position:relative;z-index:1;transition:all .2s;text-decoration:none;margin-left:.5rem}
+.cta-btn-secondary:hover{border-color:var(--blue);color:var(--text);background:rgba(79,142,247,.05)}
+
+/* ── Footer ── */
+.footer{text-align:center;padding:1.25rem 1rem;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;letter-spacing:.02em}
+
+/* ── Colors ── */
+.c-blue{color:var(--blue)}.c-green{color:var(--green)}.c-red{color:var(--red)}
+.c-amber{color:var(--amber)}.c-violet{color:var(--violet)}.c-orange{color:var(--orange)}
+.c-dim{color:var(--dim)}.c-muted{color:var(--muted)}
+
+/* ── Responsive ── */
+@media(max-width:700px){
+  .story-grid{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:1fr}
+  .values-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .about-hero{padding:2.5rem 1rem 2rem}
+  .cta-card{padding:2rem 1.25rem}
+  .cta-btn-secondary{margin-left:0;margin-top:.5rem}
+  .cta-card .lead{max-width:100%}
+}
+@media(max-width:480px){
+  .features-grid{grid-template-columns:1fr}
+  .story-visual-inner .story-num{font-size:3rem}
+  .hdr{padding:.875rem 1rem}
+  .about-hero .h1{font-size:2rem}
+  .section{padding:1.5rem 0}
+}
+</style>
+<base target="_blank">
 </head>
-
 <body>
 
-<h1>About DropCalcPro</h1>
+<header class="hdr">
+  <a href="/" style="text-decoration:none;color:inherit">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-name">DropCalc<b>Pro</b></div>
+    </div>
+  </a>
+  <div class="hdr-right">
+    <div class="live-pill"><div class="live-dot"></div>Live</div>
+  </div>
+</header>
 
-<p>
-DropCalcPro is a free online platform created to help dropshippers and ecommerce sellers calculate their profits with speed and accuracy.
-</p>
+<main class="main">
 
-<p>
-Our goal is to simplify business decisions by providing calculators for profit, ROAS, ROI, margins, shipping costs, and other important ecommerce metrics.
-</p>
+  <!-- 1. Hero -->
+  <section class="about-hero">
+    <div class="label">About DropCalc Pro</div>
+    <h1 class="h1">Built by operators.<br>Designed for scale.</h1>
+    <p class="lead">We started where you are right now — staring at spreadsheets, guessing whether a campaign was profitable, and scaling into the dark. DropCalc Pro exists to replace intuition with intelligence.</p>
+  </section>
 
-<p>
-Whether you're a beginner testing your first product or an experienced seller scaling campaigns, DropCalcPro is designed to help you make data-driven decisions.
-</p>
+  <!-- 2. Our Story -->
+  <section class="section">
+    <div class="story-grid">
+      <div class="story-visual">
+        <div class="story-visual-inner">
+          <div class="story-num">50K+</div>
+          <div class="story-num-label">Campaigns Analyzed</div>
+        </div>
+      </div>
+      <div class="story-body">
+        <div class="label">Our Story</div>
+        <h2 class="h2" style="margin-bottom:.75rem">From a Google Sheet to a Command Center</h2>
+        <p class="body">In 2023, we were running COD dropshipping campaigns across South Asia with nothing but a shared spreadsheet and a prayer. Every morning meant manually calculating ROAS, delivery rates, and net profit — and every evening meant discovering we had scaled a losing campaign by 40%.</p>
+        <p class="body">The tools that existed were either too generic (basic profit calculators) or too enterprise (bloated BI dashboards that cost more than our ad spend). We needed something in the middle: precise, fast, and built specifically for the unique economics of COD dropshipping.</p>
+        <p class="body">So we built it. What started as an internal tool quickly spread across our network of media buyers. Within six months, over 2,000 operators were using it daily. That is when we knew we had to make it available to everyone.</p>
+        <span class="story-highlight">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Trusted by operators in 14 countries
+        </span>
+      </div>
+    </div>
+  </section>
 
-<h2>Our Mission</h2>
+  <!-- 3. Mission -->
+  <section class="section">
+    <div class="mission-card">
+      <div class="label">Our Mission</div>
+      <h2 class="h2">Give every dropshipper the clarity to scale with confidence</h2>
+      <p class="lead">We believe that profitability should not be a surprise discovered at month-end. It should be a decision made in real time, backed by data that actually matters. Our mission is to arm every e-commerce operator with the same analytical rigor that Fortune 500 companies use — without the complexity, the cost, or the three-week onboarding.</p>
+    </div>
+  </section>
 
-<p>
-We aim to build one of the most useful free toolkits for dropshipping and ecommerce businesses, combining calculators, educational resources, and AI-powered insights.
-</p>
+  <!-- 4. Why DropCalcPro Exists -->
+  <section class="section">
+    <div class="section-header">
+      <div class="label">The Problem</div>
+      <h2 class="h2">Why DropCalc Pro Exists</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">📊</div>
+        <div class="why-title">Spreadsheets Don't Scale</div>
+        <div class="why-desc">Manual calculations break down past 50 orders. By the time you realize a campaign is bleeding money, you have already spent three days of ad budget on losses.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🎯</div>
+        <div class="why-title">Generic Tools Miss Context</div>
+        <div class="why-desc">Standard profit calculators ignore the reality of COD: confirmation rates, RTO losses, delivery gaps, and per-order ad economics. We built for the actual business model.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <div class="why-title">Speed Is a Competitive Edge</div>
+        <div class="why-desc">In dropshipping, the operator who spots a winning campaign first scales it first. We surface insights in milliseconds, not hours. Real-time means real advantage.</div>
+      </div>
+    </div>
+  </section>
 
-<p>
-Visit our homepage:
-<a href="https://dropcalcpro.in">https://dropcalcpro.in</a>
-</p>
+  <!-- 5. Core Values -->
+  <section class="section">
+    <div class="section-header">
+      <div class="label">Principles</div>
+      <h2 class="h2">Core Values</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-idx">01</div>
+        <div class="value-content">
+          <div class="value-title">Radical Transparency</div>
+          <div class="value-desc">We show you the truth — even when it hurts. A tool that sugarcoats bad numbers is a tool that helps you go bankrupt. We built DropCalc Pro to tell it like it is.</div>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-idx">02</div>
+        <div class="value-content">
+          <div class="value-title">Operator-First Design</div>
+          <div class="value-desc">Every pixel, every calculation, every color choice was made by people who actually run campaigns. If it does not help a media buyer make a better decision, it does not belong in the product.</div>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-idx">03</div>
+        <div class="value-content">
+          <div class="value-title">Speed Without Compromise</div>
+          <div class="value-desc">Insights should be instant, but never shallow. We optimize for sub-100ms response times while running deep diagnostic algorithms that surface issues a human would miss.</div>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-idx">04</div>
+        <div class="value-content">
+          <div class="value-title">Global by Default</div>
+          <div class="value-desc">Dropshipping is borderless. Our calculator supports 10 currencies with locale-aware formatting because your next winning product might source from China, sell in the UAE, and ship to Pakistan.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Feature Cards -->
+  <section class="section">
+    <div class="section-header">
+      <div class="label">Capabilities</div>
+      <h2 class="h2">What Makes Us Different</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="feature-title">Real-Time Profit Engine</div>
+        <div class="feature-desc">Instant net profit calculation the moment you type a number. No refresh, no submit button, no waiting.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="feature-title">Order Funnel Visualization</div>
+        <div class="feature-desc">See exactly where orders drop off — from total to confirmed to delivered — with percentage breakdowns and animated progress bars.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div class="feature-title">Campaign Health Score</div>
+        <div class="feature-desc">A 0-100 score computed from delivery rate, confirmation rate, ROAS, and margin — with a visual gauge that updates live.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="feature-title">Smart Diagnostics</div>
+        <div class="feature-desc">Automatically detects critical issues — low confirmation rates, thin margins, ROAS below 1x — and gives you specific, actionable fixes.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="feature-title">Revenue Flow Breakdown</div>
+        <div class="feature-desc">Visualize where every dollar goes: revenue, sourcing cost, ad spend, and net profit — with proportional bar charts.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <div class="feature-title">Multi-Currency Native</div>
+        <div class="feature-desc">10 currencies with proper locale formatting. Switch between INR, USD, PKR, GBP, EUR, AED, SAR, BDT, MYR, and TRY instantly.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Roadmap -->
+  <section class="section">
+    <div class="section-header">
+      <div class="label">What's Next</div>
+      <h2 class="h2">Roadmap</h2>
+    </div>
+    <div class="roadmap-wrap">
+      <div class="roadmap-item done">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-meta">
+          <span class="roadmap-tag tag-shipped">Shipped</span>
+          <span style="font-size:.72rem;color:var(--muted)">Q1 2024</span>
+        </div>
+        <div class="roadmap-title">Core Profit Calculator</div>
+        <div class="roadmap-desc">The foundational engine — real-time profit calculation, order funnel visualization, and per-order math breakdown.</div>
+      </div>
+      <div class="roadmap-item done">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-meta">
+          <span class="roadmap-tag tag-shipped">Shipped</span>
+          <span style="font-size:.72rem;color:var(--muted)">Q2 2024</span>
+        </div>
+        <div class="roadmap-title">Campaign Health Score &amp; Diagnostics</div>
+        <div class="roadmap-desc">Automated health scoring with color-coded gauges, plus intelligent issue detection with specific action plans for every problem.</div>
+      </div>
+      <div class="roadmap-item done">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-meta">
+          <span class="roadmap-tag tag-shipped">Shipped</span>
+          <span style="font-size:.72rem;color:var(--muted)">Q3 2024</span>
+        </div>
+        <div class="roadmap-title">Multi-Currency &amp; Scale Recommendations</div>
+        <div class="roadmap-desc">Full support for 10 currencies with locale-aware formatting, plus the Scale/Optimize/Stop banner that tells you exactly when to push budget.</div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-meta">
+          <span class="roadmap-tag tag-building">Building</span>
+          <span style="font-size:.72rem;color:var(--muted)">Q4 2024</span>
+        </div>
+        <div class="roadmap-title">Campaign History &amp; Trend Analysis</div>
+        <div class="roadmap-desc">Save and compare campaigns over time. Spot seasonal trends, A/B test results, and product lifecycle patterns with historical charts.</div>
+      </div>
+      <div class="roadmap-item future">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-meta">
+          <span class="roadmap-tag tag-planned">Planned</span>
+          <span style="font-size:.72rem;color:var(--muted)">Q1 2025</span>
+        </div>
+        <div class="roadmap-title">API &amp; Webhook Integrations</div>
+        <div class="roadmap-desc">Connect your Shopify, WooCommerce, or custom store. Pull order data automatically and get real-time alerts when campaigns need attention.</div>
+      </div>
+      <div class="roadmap-item future">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-meta">
+          <span class="roadmap-tag tag-planned">Planned</span>
+          <span style="font-size:.72rem;color:var(--muted)">Q2 2025</span>
+        </div>
+        <div class="roadmap-title">AI-Powered Optimization Suggestions</div>
+        <div class="roadmap-desc">Machine learning models trained on thousands of campaigns to predict which levers will most improve your profitability — before you pull them.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CTA -->
+  <section class="section">
+    <div class="cta-card">
+      <h2 class="h2">Ready to stop guessing?</h2>
+      <p class="lead">Join thousands of operators who replaced spreadsheet anxiety with data-driven confidence. Your next winning campaign is one calculation away.</p>
+      <div>
+        <a href="/" class="cta-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Launch Calculator
+        </a>
+        <a href="mailto:hello@dropcalc.pro" class="cta-btn-secondary">Contact Sales</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">⚡ DropCalcPro &nbsp;·&nbsp; Your Dropshipping Command Center</footer>
 
 </body>
 </html>
