@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DropCalc Pro — AI Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06090f;--card:#0d1220;--border:#1a2540;--border2:#1f2d4e;
+  --blue:#4f8ef7;--blue-dim:rgba(79,142,247,.12);--blue-b:rgba(79,142,247,.25);
+  --green:#22c55e;--green-dim:rgba(34,197,94,.1);--green-b:rgba(34,197,94,.3);
+  --red:#ef4444;--red-dim:rgba(239,68,68,.1);--red-b:rgba(239,68,68,.3);
+  --amber:#f59e0b;--violet:#a78bfa;--orange:#fb923c;
+  --text:#e2e8f0;--dim:#94a3b8;--muted:#475569;--subtle:#1e2a40;
+  --sidebar:#0a0e1a;--sidebar-hover:#111827;--sidebar-active:rgba(79,142,247,.1);
+  --glass:rgba(13,18,32,.85);--glass-border:rgba(79,142,247,.12);
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5;overflow:hidden}
+
+/* ── Header (EXACT match) ── */
+.hdr{border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:fixed;top:0;left:0;right:0;background:rgba(6,9,15,.93);backdrop-filter:blur(14px);z-index:100;height:64px}
+.logo{display:flex;align-items:center;gap:.65rem}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#4f8ef7,#a78bfa);border-radius:9px;display:grid;place-items:center;font-size:1rem;flex-shrink:0}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.035em}
+.logo-name b{color:var(--blue)}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.hdr-nav{display:flex;align-items:center;gap:.25rem}
+.hdr-nav a{color:var(--dim);text-decoration:none;font-size:.78rem;font-weight:600;padding:.4rem .7rem;border-radius:6px;transition:all .15s}
+.hdr-nav a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.hdr-nav a.active{color:var(--blue);background:var(--blue-dim)}
+.live-pill{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--green);background:var(--green-dim);border:1px solid var(--green-b);padding:.28rem .7rem;border-radius:99px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── Layout ── */
+.app{display:flex;height:100vh;padding-top:64px}
+
+/* ── Left Sidebar ── */
+.sidebar{width:260px;min-width:260px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-hdr{padding:1rem 1.1rem .6rem}
+.new-chat-btn{width:100%;background:linear-gradient(135deg,var(--blue),#6d5dfc);border:none;border-radius:10px;padding:.65rem 1rem;color:#fff;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.5rem;transition:all .2s;box-shadow:0 4px 16px rgba(79,142,247,.25)}
+.new-chat-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(79,142,247,.35)}
+.new-chat-btn svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+.sidebar-scroll{flex:1;overflow-y:auto;padding:0 .6rem 1rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sidebar-scroll::-webkit-scrollbar{width:3px}
+.sidebar-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.sb-sect{margin-top:.6rem}
+.sb-label{font-size:.6rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;padding:.4rem .6rem .3rem}
+.sb-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .65rem;border-radius:8px;cursor:pointer;transition:all .15s;color:var(--dim);font-size:.8rem;font-weight:500;position:relative}
+.sb-item:hover{background:var(--sidebar-hover);color:var(--text)}
+.sb-item.active{background:var(--sidebar-active);color:var(--blue);border:1px solid var(--blue-b)}
+.sb-item svg{width:15px;height:15px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-item .pin{position:absolute;right:.5rem;font-size:.65rem;color:var(--amber);opacity:0;transition:opacity .15s}
+.sb-item:hover .pin{opacity:1}
+.sb-item .unread{width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;font-size:.55rem;font-weight:700;display:grid;place-items:center;position:absolute;right:.5rem}
+
+.sb-divider{height:1px;background:var(--border);margin:.5rem .6rem}
+
+.agent-item{display:flex;align-items:center;gap:.6rem;padding:.5rem .65rem;border-radius:8px;cursor:pointer;transition:all .15s;color:var(--dim);font-size:.78rem;font-weight:500}
+.agent-item:hover{background:var(--sidebar-hover);color:var(--text)}
+.agent-item:hover .agent-avatar{transform:scale(1.08)}
+.agent-avatar{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:.85rem;flex-shrink:0;transition:transform .15s}
+.agent-ecom{background:linear-gradient(135deg,var(--blue),#6d5dfc)}
+.agent-fb{background:linear-gradient(135deg,#1877f2,#0d5cb6)}
+.agent-shop{background:linear-gradient(135deg,var(--green),#16a34a)}
+.agent-seo{background:linear-gradient(135deg,var(--orange),#ea580c)}
+.agent-copy{background:linear-gradient(135deg,var(--violet),#7c3aed)}
+.agent-prod{background:linear-gradient(135deg,var(--amber),#d97706)}
+.agent-email{background:linear-gradient(135deg,#ec4899,#be185d)}
+.agent-biz{background:linear-gradient(135deg,#06b6d4,#0891b2)}
+
+.sb-footer{padding:.6rem 1rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:.6rem}
+.sb-user{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--blue),#a78bfa);display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-plan{font-size:.6rem;color:var(--muted)}
+
+/* ── Main Chat Area ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.main::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(79,142,247,.06),transparent 70%);pointer-events:none;z-index:0}
+
+.chat-body{flex:1;overflow-y:auto;padding:2rem 2.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.chat-body::-webkit-scrollbar{width:4px}
+.chat-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+.welcome{text-align:center;max-width:680px;width:100%}
+.welcome-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .9rem;border-radius:99px;background:var(--blue-dim);border:1px solid var(--blue-b);font-size:.68rem;font-weight:700;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.5rem;animation:fadeInUp .6s ease both}
+.welcome-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.welcome h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:.6rem;background:linear-gradient(135deg,var(--text),var(--dim));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fadeInUp .6s .1s ease both}
+.welcome p.sub{font-size:1.05rem;color:var(--dim);margin-bottom:2.5rem;animation:fadeInUp .6s .2s ease both}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Premium Input ── */
+.input-hero{width:100%;max-width:720px;margin:0 auto;animation:fadeInUp .6s .3s ease both}
+.input-wrap{background:var(--glass);border:1.5px solid var(--glass-border);border-radius:18px;padding:1.1rem 1.3rem;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04);transition:all .3s cubic-bezier(.4,0,.2,1)}
+.input-wrap:focus-within{border-color:var(--blue);box-shadow:0 8px 32px rgba(79,142,247,.1),0 0 0 3px rgba(79,142,247,.08),inset 0 1px 0 rgba(255,255,255,.06)}
+.input-wrap textarea{width:100%;background:transparent;border:none;color:var(--text);font-size:1rem;font-family:'Inter',sans-serif;resize:none;outline:none;min-height:28px;max-height:200px;line-height:1.6}
+.input-wrap textarea::placeholder{color:var(--muted)}
+.input-actions{display:flex;align-items:center;justify-content:space-between;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
+.input-left{display:flex;gap:.35rem}
+.input-btn{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;padding:.4rem .65rem;color:var(--dim);font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:.35rem;transition:all .15s}
+.input-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(79,142,247,.08)}
+.input-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.input-send{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue),#6d5dfc);border:none;color:#fff;display:grid;place-items:center;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(79,142,247,.3)}
+.input-send:hover{transform:scale(1.05);box-shadow:0 4px 20px rgba(79,142,247,.4)}
+.input-send:active{transform:scale(.95)}
+.input-send svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── Suggested Prompts ── */
+.prompts{width:100%;max-width:720px;margin:1.5rem auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;animation:fadeInUp .6s .4s ease both}
+@media(max-width:900px){.prompts{grid-template-columns:repeat(2,1fr)}}
+.prompt-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.prompt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),#a78bfa);opacity:0;transition:opacity .2s}
+.prompt-card:hover{border-color:var(--blue-b);transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,142,247,.1)}
+.prompt-card:hover::before{opacity:1}
+.prompt-icon{font-size:1.3rem;margin-bottom:.4rem}
+.prompt-title{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.15rem}
+.prompt-desc{font-size:.65rem;color:var(--muted);line-height:1.4}
+
+/* ── Right Panel ── */
+.rpanel{width:280px;min-width:280px;background:var(--sidebar);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.rpanel-hdr{padding:1rem 1.1rem .5rem}
+.rpanel-title{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.rpanel-scroll{flex:1;overflow-y:auto;padding:0 .8rem 1rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.rpanel-scroll::-webkit-scrollbar{width:3px}
+.rpanel-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.qa-item{display:flex;align-items:center;gap:.65rem;padding:.65rem .7rem;border-radius:10px;cursor:pointer;transition:all .15s;margin-bottom:.35rem;border:1px solid transparent}
+.qa-item:hover{background:var(--sidebar-hover);border-color:var(--border2)}
+.qa-item:hover .qa-icon{transform:scale(1.1)}
+.qa-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:.95rem;flex-shrink:0;transition:transform .15s}
+.qa-info{flex:1;min-width:0}
+.qa-name{font-size:.78rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qa-desc{font-size:.62rem;color:var(--muted)}
+
+/* ── Feature Cards Bottom ── */
+.features{width:100%;padding:1.5rem 2.5rem;background:linear-gradient(180deg,transparent,rgba(79,142,247,.03));border-top:1px solid var(--border);position:relative;z-index:1}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:1200px;margin:0 auto}
+@media(max-width:1100px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.features-grid{grid-template-columns:1fr}}
+
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem;position:relative;overflow:hidden;transition:all .3s}
+.feat-card:hover{border-color:var(--blue-b);transform:translateY(-3px);box-shadow:0 12px 40px rgba(79,142,247,.08)}
+.feat-card::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;opacity:.04;filter:blur(30px);pointer-events:none}
+.feat-card:nth-child(1)::after{background:var(--blue)}
+.feat-card:nth-child(2)::after{background:var(--green)}
+.feat-card:nth-child(3)::after{background:var(--violet)}
+.feat-card:nth-child(4)::after{background:var(--orange)}
+.feat-icon{font-size:1.6rem;margin-bottom:.6rem}
+.feat-title{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.25rem}
+.feat-desc{font-size:.72rem;color:var(--dim);line-height:1.5}
+
+/* ── Footer (EXACT match) ── */
+.footer{text-align:center;padding:1.25rem 1rem;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;letter-spacing:.02em}
+
+/* ── Responsive ── */
+@media(max-width:1200px){
+  .rpanel{display:none}
+  .sidebar{width:240px;min-width:240px}
+}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:64px;bottom:0;transform:translateX(-100%);transition:transform .3s;z-index:99}
+  .sidebar.open{transform:translateX(0)}
+  .chat-body{padding:1.5rem 1rem}
+  .features{padding:1rem}
+  .prompts{grid-template-columns:1fr 1fr}
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     HEADER — EXACT match from original design
+     ═══════════════════════════════════════════════ -->
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-name">DropCalc<b>Pro</b></div>
+  </div>
+  <nav class="hdr-nav">
+    <a href="index.html">Calculator</a>
+    <a href="#" class="active">AI Dashboard</a>
+  </nav>
+  <div class="hdr-right">
+    <div class="live-pill"><div class="live-dot"></div>Live</div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     APP LAYOUT
+     ═══════════════════════════════════════════════ -->
+<div class="app">
+
+  <!-- ── LEFT SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-hdr">
+      <button class="new-chat-btn" onclick="newChat()">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        New Chat
+      </button>
+    </div>
+
+    <div class="sidebar-scroll">
+      <div class="sb-sect">
+        <div class="sb-label">Recent</div>
+        <div class="sb-item active" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Product Research: Kitchen Gadgets
+          <span class="pin">📌</span>
+        </div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          FB Ad Copy for Pet Grooming
+        </div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          ROAS Analysis Q2 2026
+          <span class="unread">3</span>
+        </div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Shopify Store SEO Audit
+        </div>
+      </div>
+
+      <div class="sb-sect">
+        <div class="sb-label">Folders</div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Product Research
+        </div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Ad Campaigns
+        </div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Supplier Lists
+        </div>
+      </div>
+
+      <div class="sb-sect">
+        <div class="sb-label">Pinned</div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Profit Margin Calculator
+          <span class="pin">📌</span>
+        </div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Trending Products July 2026
+          <span class="pin">📌</span>
+        </div>
+      </div>
+
+      <div class="sb-divider"></div>
+
+      <div class="sb-sect">
+        <div class="sb-label">AI Agents</div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-ecom">🛒</div>
+          Ecommerce Expert
+        </div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-fb">📢</div>
+          Facebook Ads Expert
+        </div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-shop">🛍️</div>
+          Shopify Developer
+        </div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-seo">🔍</div>
+          SEO Expert
+        </div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-copy">✍️</div>
+          Copywriter
+        </div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-prod">📦</div>
+          Product Researcher
+        </div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-email">📧</div>
+          Email Marketing Expert
+        </div>
+        <div class="agent-item" onclick="selectAgent(this)">
+          <div class="agent-avatar agent-biz">📊</div>
+          Business Analyst
+        </div>
+      </div>
+
+      <div class="sb-divider"></div>
+
+      <div class="sb-sect">
+        <div class="sb-label">Settings</div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Preferences
+        </div>
+        <div class="sb-item" onclick="selectChat(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          API Keys
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-footer">
+      <div class="sb-user">JD</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name">John Doe</div>
+        <div class="sb-user-plan">Pro Plan</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CHAT AREA ── -->
+  <main class="main">
+    <div class="chat-body" id="chatBody">
+      <div class="welcome" id="welcomeScreen">
+        <div class="welcome-badge">
+          <span class="dot"></span>
+          AI-Powered Intelligence
+        </div>
+        <h1>DropCalcPro AI</h1>
+        <p class="sub">Your personal ecommerce intelligence platform.</p>
+
+        <div class="input-hero">
+          <div class="input-wrap">
+            <textarea id="mainInput" rows="1" placeholder="Ask anything about dropshipping, ecommerce, Shopify, Meta Ads, products, suppliers or marketing..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+            <div class="input-actions">
+              <div class="input-left">
+                <button class="input-btn" onclick="attachFile()">
+                  <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                  Attach
+                </button>
+                <button class="input-btn" onclick="uploadImage()">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  Image
+                </button>
+                <button class="input-btn" onclick="voiceInput()">
+                  <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                  Voice
+                </button>
+              </div>
+              <button class="input-send" onclick="sendMessage()" id="sendBtn">
+                <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="prompts">
+          <div class="prompt-card" onclick="fillPrompt('Generate a compelling product description for a trending kitchen gadget targeting Indian COD customers')">
+            <div class="prompt-icon">📝</div>
+            <div class="prompt-title">Generate Product Description</div>
+            <div class="prompt-desc">AI-powered copy for your listings</div>
+          </div>
+          <div class="prompt-card" onclick="fillPrompt('Find winning products with 200%+ margin for Q3 2026 in the home & wellness niche')">
+            <div class="prompt-icon">🏆</div>
+            <div class="prompt-title">Find Winning Product</div>
+            <div class="prompt-desc">Discover high-margin opportunities</div>
+          </div>
+          <div class="prompt-card" onclick="fillPrompt('Create a high-converting Facebook ad creative and copy for a pet grooming product targeting US audiences')">
+            <div class="prompt-icon">📢</div>
+            <div class="prompt-title">Create Facebook Ad</div>
+            <div class="prompt-desc">Full ad creative + targeting strategy</div>
+          </div>
+          <div class="prompt-card" onclick="fillPrompt('Build a complete Shopify store structure for a one-product brand in the fitness niche')">
+            <div class="prompt-icon">🛍️</div>
+            <div class="prompt-title">Generate Shopify Store</div>
+            <div class="prompt-desc">Store layout, pages & apps setup</div>
+          </div>
+          <div class="prompt-card" onclick="fillPrompt('Calculate profit margins for a product costing ₹350, selling at ₹1299, with ₹80 CPO and 40% delivery rate')">
+            <div class="prompt-icon">💰</div>
+            <div class="prompt-title">Calculate Profit</div>
+            <div class="prompt-desc">Full P&L with ROAS & ROI analysis</div>
+          </div>
+          <div class="prompt-card" onclick="fillPrompt('Write a 5-email abandoned cart sequence for a beauty products Shopify store')">
+            <div class="prompt-icon">📧</div>
+            <div class="prompt-title">Generate Email</div>
+            <div class="prompt-desc">Sequences, campaigns & templates</div>
+          </div>
+          <div class="prompt-card" onclick="fillPrompt('Design a high-converting COD landing page structure for a phone accessories product in Pakistan')">
+            <div class="prompt-icon">🎯</div>
+            <div class="prompt-title">Create Landing Page</div>
+            <div class="prompt-desc">Layout, copy & conversion elements</div>
+          </div>
+          <div class="prompt-card" onclick="fillPrompt('Find reliable suppliers for wireless earbuds with fast shipping to UAE and competitive MOQ')">
+            <div class="prompt-icon">🏭</div>
+            <div class="prompt-title">Find Supplier</div>
+            <div class="prompt-desc">Vetted suppliers by region & product</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Feature Cards Bottom ── -->
+    <div class="features">
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🧠</div>
+          <div class="feat-title">Multi-Agent Intelligence</div>
+          <div class="feat-desc">8 specialized AI agents working together — from product research to ad optimization, all in one unified platform.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">⚡</div>
+          <div class="feat-title">Real-Time Analytics</div>
+          <div class="feat-desc">Live profit calculations, ROAS tracking, and delivery rate monitoring with instant actionable insights.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🌍</div>
+          <div class="feat-title">Global Market Intelligence</div>
+          <div class="feat-desc">Country-specific strategies for India, Pakistan, UAE, USA & Bangladesh with localized payment & logistics data.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔒</div>
+          <div class="feat-title">Enterprise-Grade Security</div>
+          <div class="feat-desc">End-to-end encrypted conversations, secure API key management, and zero data retention policy.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── RIGHT PANEL ── -->
+  <aside class="rpanel">
+    <div class="rpanel-hdr">
+      <div class="rpanel-title">Quick Actions</div>
+    </div>
+    <div class="rpanel-scroll">
+      <div class="qa-item" onclick="quickAction('Generate product images for my listing')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,var(--blue),#6d5dfc)">🖼️</div>
+        <div class="qa-info">
+          <div class="qa-name">Generate Product Images</div>
+          <div class="qa-desc">AI product photography</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Create a video script for TikTok ad')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,var(--red),#dc2626)">🎬</div>
+        <div class="qa-info">
+          <div class="qa-name">Create Video Script</div>
+          <div class="qa-desc">TikTok & Reels scripts</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Optimize my product listing for SEO')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,var(--green),#16a34a)">🔍</div>
+        <div class="qa-info">
+          <div class="qa-name">SEO Optimizer</div>
+          <div class="qa-desc">Keywords & meta tags</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Analyze my Meta Ads performance')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,#1877f2,#0d5cb6)">📊</div>
+        <div class="qa-info">
+          <div class="qa-name">Meta Ads Analyzer</div>
+          <div class="qa-desc">Performance breakdown</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Calculate ROAS for my campaign')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,var(--amber),#d97706)">📈</div>
+        <div class="qa-info">
+          <div class="qa-name">ROAS Calculator</div>
+          <div class="qa-desc">Return on ad spend</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Calculate profit for my dropshipping store')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,var(--violet),#7c3aed)">💵</div>
+        <div class="qa-info">
+          <div class="qa-name">Profit Calculator</div>
+          <div class="qa-desc">Full P&L analysis</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Build a custom Shopify theme')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">🎨</div>
+        <div class="qa-info">
+          <div class="qa-name">Theme Builder</div>
+          <div class="qa-desc">Custom store design</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Generate store policies for my Shopify store')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,#ec4899,#be185d)">📋</div>
+        <div class="qa-info">
+          <div class="qa-name">Policy Generator</div>
+          <div class="qa-desc">Terms, privacy & refund</div>
+        </div>
+      </div>
+      <div class="qa-item" onclick="quickAction('Generate FAQ section for my product page')">
+        <div class="qa-icon" style="background:linear-gradient(135deg,var(--orange),#ea580c)">❓</div>
+        <div class="qa-info">
+          <div class="qa-name">FAQ Generator</div>
+          <div class="qa-desc">Product Q&A content</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER — EXACT match from original design
+     ═══════════════════════════════════════════════ -->
+<footer class="footer">⚡ DropCalcPro &nbsp;·&nbsp; Your Dropshipping Command Center</footer>
+
+<script>
+function autoResize(t){
+  t.style.height='auto';
+  t.style.height=Math.min(t.scrollHeight,200)+'px';
+}
+function handleKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+}
+function sendMessage(){
+  var inp=document.getElementById('mainInput');
+  var txt=inp.value.trim();
+  if(!txt)return;
+  var body=document.getElementById('chatBody');
+  var welcome=document.getElementById('welcomeScreen');
+  if(welcome){
+    welcome.style.display='none';
+    body.style.justifyContent='flex-start';
+    body.style.paddingTop='1.5rem';
+  }
+  var userMsg=document.createElement('div');
+  userMsg.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:14px;border-bottom-right-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease';
+  userMsg.textContent=txt;
+  body.appendChild(userMsg);
+  inp.value='';
+  inp.style.height='auto';
+  body.scrollTop=body.scrollHeight;
+  setTimeout(function(){
+    var botMsg=document.createElement('div');
+    botMsg.style.cssText='align-self:flex-start;max-width:80%;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:14px;border-bottom-left-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease';
+    botMsg.innerHTML='<strong style="color:var(--blue)">DropAI</strong> is analyzing your request...<br><br><em style="color:var(--dim)">This is a UI demo. Connect your LLM API to enable real responses.</em>';
+    body.appendChild(botMsg);
+    body.scrollTop=body.scrollHeight;
+  },800);
+}
+function fillPrompt(text){
+  var inp=document.getElementById('mainInput');
+  inp.value=text;
+  autoResize(inp);
+  inp.focus();
+}
+function quickAction(text){
+  fillPrompt(text);
+}
+function attachFile(){alert('File attachment UI - demo only');}
+function uploadImage(){alert('Image upload UI - demo only');}
+function voiceInput(){alert('Voice input UI - demo only');}
+function newChat(){
+  var body=document.getElementById('chatBody');
+  body.innerHTML='<div class="welcome" id="welcomeScreen"><div class="welcome-badge"><span class="dot"></span>AI-Powered Intelligence</div><h1>DropCalcPro AI</h1><p class="sub">Your personal ecommerce intelligence platform.</p><div class="input-hero"><div class="input-wrap"><textarea id="mainInput" rows="1" placeholder="Ask anything about dropshipping, ecommerce, Shopify, Meta Ads, products, suppliers or marketing..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea><div class="input-actions"><div class="input-left"><button class="input-btn" onclick="attachFile()"><svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>Attach</button><button class="input-btn" onclick="uploadImage()"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Image</button><button class="input-btn" onclick="voiceInput()"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>Voice</button></div><button class="input-send" onclick="sendMessage()" id="sendBtn"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button></div></div></div><div class="prompts"><div class="prompt-card" onclick="fillPrompt('Generate a compelling product description for a trending kitchen gadget targeting Indian COD customers')"><div class="prompt-icon">📝</div><div class="prompt-title">Generate Product Description</div><div class="prompt-desc">AI-powered copy for your listings</div></div><div class="prompt-card" onclick="fillPrompt('Find winning products with 200%+ margin for Q3 2026 in the home & wellness niche')"><div class="prompt-icon">🏆</div><div class="prompt-title">Find Winning Product</div><div class="prompt-desc">Discover high-margin opportunities</div></div><div class="prompt-card" onclick="fillPrompt('Create a high-converting Facebook ad creative and copy for a pet grooming product targeting US audiences')"><div class="prompt-icon">📢</div><div class="prompt-title">Create Facebook Ad</div><div class="prompt-desc">Full ad creative + targeting strategy</div></div><div class="prompt-card" onclick="fillPrompt('Build a complete Shopify store structure for a one-product brand in the fitness niche')"><div class="prompt-icon">🛍️</div><div class="prompt-title">Generate Shopify Store</div><div class="prompt-desc">Store layout, pages & apps setup</div></div><div class="prompt-card" onclick="fillPrompt('Calculate profit margins for a product costing ₹350, selling at ₹1299, with ₹80 CPO and 40% delivery rate')"><div class="prompt-icon">💰</div><div class="prompt-title">Calculate Profit</div><div class="prompt-desc">Full P&L with ROAS & ROI analysis</div></div><div class="prompt-card" onclick="fillPrompt('Write a 5-email abandoned cart sequence for a beauty products Shopify store')"><div class="prompt-icon">📧</div><div class="prompt-title">Generate Email</div><div class="prompt-desc">Sequences, campaigns & templates</div></div><div class="prompt-card" onclick="fillPrompt('Design a high-converting COD landing page structure for a phone accessories product in Pakistan')"><div class="prompt-icon">🎯</div><div class="prompt-title">Create Landing Page</div><div class="prompt-desc">Layout, copy & conversion elements</div></div><div class="prompt-card" onclick="fillPrompt('Find reliable suppliers for wireless earbuds with fast shipping to UAE and competitive MOQ')"><div class="prompt-icon">🏭</div><div class="prompt-title">Find Supplier</div><div class="prompt-desc">Vetted suppliers by region & product</div></div></div></div>';
+  body.scrollTop=0;
+}
+function selectChat(el){
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
+  el.classList.add('active');
+}
+function selectAgent(el){
+  document.querySelectorAll('.agent-item').forEach(function(i){i.style.background='';i.style.color='';});
+  el.style.background='var(--sidebar-active)';
+  el.style.color='var(--blue)';
+}
+</script>
+</body>
+</html>
