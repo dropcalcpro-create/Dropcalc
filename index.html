@@ -33,12 +33,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
+/* AI CTA Button Placement Styles */
+.btn-ai{display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#ffffff;background:linear-gradient(135deg,var(--blue),var(--violet));border:1px solid rgba(255,255,255,0.1);padding:.32rem .85rem;border-radius:7px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn-ai:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(79,142,247,.25)}
+
 /* ── Layout ── */
 .main{max-width:980px;margin:0 auto;padding:1.5rem 1.25rem 4rem;display:flex;flex-direction:column;gap:1.1rem}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.4rem}
-/* Tightened bottom padding specifically for the campaign data card containing the footer line */
-.card:has(.card-footer) {padding-bottom: 0.9rem;}
-.card-title{font-size:.67rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.1rem;display:flex;align-items:center;gap:.45rem}
+.card-title{font-size:.67rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:11rem;display:flex;align-items:center;gap:.45rem}
 .card-title svg{opacity:.55}
 
 /* ── Inputs ── */
@@ -53,14 +55,12 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 input[type=number]:hover{border-color:#253660;background:rgba(255,255,255,.05)}
 input[type=number]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,142,247,.14);background:rgba(79,142,247,.05)}
 .np{padding-left:.85rem}
-/* Reduced top margin and padding to bring the "Clear All" section closer to the inputs */
-.card-footer{display:flex;justify-content:flex-end;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)}
+.card-footer{display:flex;justify-content:flex-end;margin-top:.875rem;padding-top:.875rem;border-top:1px solid var(--border)}
 .btn-clear{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--dim);font-size:.75rem;font-weight:600;padding:.38rem .85rem;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
 .btn-clear:hover{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.06)}
 
 /* ── Hero ── */
-/* Optimized vertical padding from 2.25rem down to 1.5rem to pull the layout closer together */
-.hero{border-radius:18px;padding:1.5rem 2rem;text-align:center;border:1px solid var(--border);position:relative;overflow:hidden;transition:background .4s,border-color .4s}
+.hero{border-radius:18px;padding:2.25rem 2rem;text-align:center;border:1px solid var(--border);position:relative;overflow:hidden;transition:background .4s,border-color .4s}
 .hero-neutral{background:var(--card)}
 .hero-profit{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(16,185,129,.04));border-color:var(--green-b)}
 .hero-loss{background:linear-gradient(135deg,rgba(239,68,68,.09),rgba(220,38,38,.04));border-color:var(--red-b)}
@@ -84,7 +84,7 @@ input[type=number]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,1
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1rem;text-align:center}
 .kpi-val{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-.03em}
 .kpi-name{font-size:.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-top:.3rem}
-.kpi-tag font-size:.67rem;font-weight:600;margin-top:.25rem;padding:.15rem .5rem;border-radius:5px;display:inline-block}
+.kpi-tag{font-size:.67rem;font-weight:600;margin-top:.25rem;padding:.15rem .5rem;border-radius:5px;display:inline-block}
 .tag-good{background:rgba(34,197,94,.1);color:var(--green)}
 .tag-warn{background:rgba(245,158,11,.1);color:var(--amber)}
 .tag-bad{background:rgba(239,68,68,.1);color:var(--red)}
@@ -159,7 +159,7 @@ input[type=number]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,1
 }
 @media(max-width:480px){
   .stats-grid{grid-template-columns:1fr 1fr}
-  .hero{padding:1.5rem 1.25rem}
+  .hero{padding:2rem 1.25rem}
   .hdr{padding:.875rem 1rem}
   .hero-amount{font-size:2.5rem}
 }
@@ -173,6 +173,7 @@ input[type=number]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,1
     <div class="logo-name">DropCalc<b>Pro</b></div>
   </div>
   <div class="hdr-right">
+    <a href="https://dropcalcpro.in/ai/#" class="btn-ai">✨ Try Best Ecommerce AI</a>
     <select id="cur-sel" class="cur-sel" onchange="setCur(this.value)">
       <option value="INR">₹  INR — Indian Rupee</option>
       <option value="USD">$  USD — US Dollar</option>
