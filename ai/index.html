@@ -82,15 +82,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 .main::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(79,142,247,.06),transparent 70%);pointer-events:none;z-index:0}
 
-/* UPDATED CHAT LAYOUT STRUCTURE */
-.chat-body{flex:1;overflow-y:auto;padding:2rem 2.5rem 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+/* CHAT BODY MAIN SCROLL FIX */
+.chat-body{flex:1;overflow-y:auto;padding:2rem 2.5rem 120px;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .chat-body::-webkit-scrollbar{width:4px}
 .chat-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-/* Messages Wrap allows messages to stretch wide inside chat body */
-#messagesWrap { width: 100%; max-width: 720px; display: flex; flex-direction: column; }
+#messagesWrap { width: 100%; max-width: 720px; display: flex; flex-direction: column; height: 100%; justify-content: center; }
 
-.welcome{text-align:center;max-width:680px;width:100%}
+.welcome{text-align:center;max-width:680px;width:100%;margin:auto 0;}
 .welcome-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .9rem;border-radius:99px;background:var(--blue-dim);border:1px solid var(--blue-b);font-size:.68rem;font-weight:700;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.5rem;animation:fadeInUp .6s ease both}
 .welcome-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
@@ -98,9 +97,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .welcome p.sub{font-size:1.05rem;color:var(--dim);margin-bottom:2.5rem;animation:fadeInUp .6s .2s ease both}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-/* Persistent Fixed Input Container */
-.input-sticky-area { width: 100%; padding: 0 2.5rem 2rem; display: flex; justify-content: center; background: transparent; z-index: 10; }
-.input-hero{width:100%;max-width:720px;}
+/* FLOATING OVERLAY FIXED INPUT CONFIG */
+.input-sticky-area { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem 2.5rem; display: flex; justify-content: center; background: linear-gradient(to top, var(--bg) 70%, transparent); z-index: 10; pointer-events: none; }
+.input-hero{width:100%;max-width:720px;pointer-events: auto;}
 
 .input-wrap{background:var(--glass);border:1.5px solid var(--glass-border);border-radius:18px;padding:1.1rem 1.3rem;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04);transition:all .3s cubic-bezier(.4,0,.2,1)}
 .input-wrap:focus-within{border-color:var(--blue);box-shadow:0 8px 32px rgba(79,142,247,.1),0 0 0 3px rgba(79,142,247,.08),inset 0 1px 0 rgba(255,255,255,.06)}
@@ -166,10 +165,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 @media(max-width:768px){
   .sidebar{position:fixed;left:0;top:64px;bottom:0;transform:translateX(-100%);transition:transform .3s;z-index:99}
   .sidebar.open{transform:translateX(0)}
-  .chat-body{padding:1.5rem 1rem}
+  .chat-body{padding:1.5rem 1rem 120px}
   .features{padding:1rem}
   .prompts{grid-template-columns:1fr 1fr}
-  .input-sticky-area { padding: 0 1rem 1rem; }
+  .input-sticky-area { padding: 1rem; }
 }
 </style>
 </head>
@@ -528,22 +527,20 @@ async function sendMessage(){
   
   if(welcome && welcome.style.display !== 'none'){
     welcome.style.display='none';
-    body.style.justifyContent='flex-start';
+    wrap.style.height='auto';
+    wrap.style.justifyContent='flex-start';
     body.style.paddingTop='1.5rem';
   }
 
-  // Inject User bubble frame into the dedicated wrap
   var userMsg=document.createElement('div');
   userMsg.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:14px;border-bottom-right-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease;word-break:break-word;';
   userMsg.textContent=txt;
   wrap.appendChild(userMsg);
 
-  // Clear input frame parameters
   inp.value='';
   inp.style.height='auto';
   body.scrollTop=body.scrollHeight;
 
-  // Render Bot Loading block frame into the wrap
   var botMsg=document.createElement('div');
   botMsg.style.cssText='align-self:flex-start;max-width:80%;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:14px;border-bottom-left-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease;';
   botMsg.innerHTML='<strong style="color:var(--blue)">DropAI</strong> is compiling analysis models...';
@@ -568,7 +565,7 @@ async function sendMessage(){
 
     let formattedResponse = data.reply
       .replace(/\n/g, "<br>")
-      .replace(/\*\*(.*?)\*\"/g, "<strong>$1</strong>");
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
     botMsg.innerHTML = `<strong style="color:var(--blue)">DropAI</strong><br><br>${formattedResponse}`;
 
@@ -606,7 +603,6 @@ function newChat(){
   chatHistory = [];
   var body=document.getElementById('chatBody');
   
-  // Re-render only the internal messages layout area without destroying elements completely
   body.innerHTML='<div id="messagesWrap"><div class="welcome" id="welcomeScreen"><div class="welcome-badge"><span class="dot"></span>AI-Powered Intelligence</div><h1>DropCalcPro AI</h1><p class="sub">Your personal ecommerce intelligence platform.</p><div class="prompts"><div class="prompt-card" onclick="fillPrompt(\'Generate a compelling product description for a trending kitchen gadget targeting Indian COD customers\')"><div class="prompt-icon">📝</div><div class="prompt-title">Generate Product Description</div><div class="prompt-desc">AI-powered copy for your listings</div></div><div class="prompt-card" onclick="fillPrompt(\'Find winning products with 200%+ margin for Q3 2026 in the home & wellness niche\')"><div class="prompt-icon">🏆</div><div class="prompt-title">Find Winning Product</div><div class="prompt-desc">Discover high-margin opportunities</div></div><div class="prompt-card" onclick="fillPrompt(\'Create a high-converting Facebook ad creative and copy for a pet grooming product targeting US audiences\')"><div class="prompt-icon">📢</div><div class="prompt-title">Create Facebook Ad</div><div class="prompt-desc">Full ad creative + targeting strategy</div></div><div class="prompt-card" onclick="fillPrompt(\'Build a complete Shopify store structure for a one-product brand in the fitness niche\')"><div class="prompt-icon">🛍️</div><div class="prompt-title">Generate Shopify Store</div><div class="prompt-desc">Store layout, pages & apps setup</div></div><div class="prompt-card" onclick="fillPrompt(\'Calculate profit margins for a product costing ₹350, selling at ₹1299, with ₹80 CPO and 40% delivery rate\')"><div class="prompt-icon">💰</div><div class="prompt-title">Calculate Profit</div><div class="prompt-desc">Full P&L with ROAS & ROI analysis</div></div><div class="prompt-card" onclick="fillPrompt(\'Write a 5-email abandoned cart sequence for a beauty products Shopify store\')"><div class="prompt-icon">📧</div><div class="prompt-title">Generate Email</div><div class="prompt-desc">Sequences, campaigns & templates</div></div><div class="prompt-card" onclick="fillPrompt(\'Design a high-converting COD landing page structure for a phone accessories product in Pakistan\')"><div class="prompt-icon">🎯</div><div class="prompt-title">Create Landing Page</div><div class="prompt-desc">Layout, copy & conversion elements</div></div><div class="prompt-card" onclick="fillPrompt(\'Find reliable suppliers for wireless earbuds with fast shipping to UAE and competitive MOQ\')"><div class="prompt-icon">🏭</div><div class="prompt-title">Find Supplier</div><div class="prompt-desc">Vetted suppliers by region & product</div></div></div></div></div>';
   
   var inp = document.getElementById('mainInput');
@@ -614,7 +610,7 @@ function newChat(){
     inp.value = '';
     inp.style.height = 'auto';
   }
-  body.style.justifyContent='center';
+  body.style.paddingTop='2rem';
   body.scrollTop=0;
 }
 
