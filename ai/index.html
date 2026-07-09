@@ -1,3 +1,27 @@
+I see exactly what is happening! You fell right into **The Overwrite Trap** we talked about, but with a unique twist.
+
+### The Problem
+
+When you type your first message and hit send, your code executes this line:
+
+```javascript
+welcome.style.display = 'none';
+
+```
+
+This hides the `#welcomeScreen` element. The problem is that your `<div class="input-hero">` (which contains your chatbox textarea, attach buttons, and send button) is nested **inside** that `#welcomeScreen`.
+
+So, the moment you send your first chat, you hide the welcome panel, which completely vanishes the input box along with it!
+
+---
+
+### The Fix
+
+We need to pull the input box out of the `#welcomeScreen` so that it stays fixed at the bottom of the chat view permanently, while only the greeting text and suggestion prompt cards vanish.
+
+Here is your fully corrected `index.html` file. Replace your entire file with this:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,9 +106,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 .main::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(79,142,247,.06),transparent 70%);pointer-events:none;z-index:0}
 
-.chat-body{flex:1;overflow-y:auto;padding:2rem 2.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+/* UPDATED CHAT LAYOUT STRUCTURE */
+.chat-body{flex:1;overflow-y:auto;padding:2rem 2.5rem 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .chat-body::-webkit-scrollbar{width:4px}
 .chat-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* Messages Wrap allows messages to stretch wide inside chat body */
+#messagesWrap { width: 100%; max-width: 720px; display: flex; flex-direction: column; }
 
 .welcome{text-align:center;max-width:680px;width:100%}
 .welcome-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .9rem;border-radius:99px;background:var(--blue-dim);border:1px solid var(--blue-b);font-size:.68rem;font-weight:700;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.5rem;animation:fadeInUp .6s ease both}
@@ -94,7 +122,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .welcome p.sub{font-size:1.05rem;color:var(--dim);margin-bottom:2.5rem;animation:fadeInUp .6s .2s ease both}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-.input-hero{width:100%;max-width:720px;margin:0 auto;animation:fadeInUp .6s .3s ease both}
+/* Persistent Fixed Input Container */
+.input-sticky-area { width: 100%; padding: 0 2.5rem 2rem; display: flex; justify-content: center; background: transparent; z-index: 10; }
+.input-hero{width:100%;max-width:720px;}
+
 .input-wrap{background:var(--glass);border:1.5px solid var(--glass-border);border-radius:18px;padding:1.1rem 1.3rem;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04);transition:all .3s cubic-bezier(.4,0,.2,1)}
 .input-wrap:focus-within{border-color:var(--blue);box-shadow:0 8px 32px rgba(79,142,247,.1),0 0 0 3px rgba(79,142,247,.08),inset 0 1px 0 rgba(255,255,255,.06)}
 .input-wrap textarea{width:100%;background:transparent;border:none;color:var(--text);font-size:1rem;font-family:'Inter',sans-serif;resize:none;outline:none;min-height:28px;max-height:200px;line-height:1.6}
@@ -162,6 +193,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   .chat-body{padding:1.5rem 1rem}
   .features{padding:1rem}
   .prompts{grid-template-columns:1fr 1fr}
+  .input-sticky-area { padding: 0 1rem 1rem; }
 }
 </style>
 </head>
@@ -308,79 +340,85 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
   <main class="main">
     <div class="chat-body" id="chatBody">
-      <div class="welcome" id="welcomeScreen">
-        <div class="welcome-badge">
-          <span class="dot"></span>
-          AI-Powered Intelligence
-        </div>
-        <h1>DropCalcPro AI</h1>
-        <p class="sub">Your personal ecommerce intelligence platform.</p>
+      <div id="messagesWrap">
+        
+        <div class="welcome" id="welcomeScreen">
+          <div class="welcome-badge">
+            <span class="dot"></span>
+            AI-Powered Intelligence
+          </div>
+          <h1>DropCalcPro AI</h1>
+          <p class="sub">Your personal ecommerce intelligence platform.</p>
 
-        <div class="input-hero">
-          <div class="input-wrap">
-            <textarea id="mainInput" rows="1" placeholder="Ask anything about dropshipping, ecommerce, Shopify, Meta Ads, products, suppliers or marketing..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
-            <div class="input-actions">
-              <div class="input-left">
-                <button class="input-btn" onclick="attachFile()">
-                  <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-                  Attach
-                </button>
-                <button class="input-btn" onclick="uploadImage()">
-                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                  Image
-                </button>
-                <button class="input-btn" onclick="voiceInput()">
-                  <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                  Voice
-                </button>
-              </div>
-              <button class="input-send" onclick="sendMessage()" id="sendBtn">
-                <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-              </button>
+          <div class="prompts">
+            <div class="prompt-card" onclick="fillPrompt('Generate a compelling product description for a trending kitchen gadget targeting Indian COD customers')">
+              <div class="prompt-icon">📝</div>
+              <div class="prompt-title">Generate Product Description</div>
+              <div class="prompt-desc">AI-powered copy for your listings</div>
+            </div>
+            <div class="prompt-card" onclick="fillPrompt('Find winning products with 200%+ margin for Q3 2026 in the home & wellness niche')">
+              <div class="prompt-icon">🏆</div>
+              <div class="prompt-title">Find Winning Product</div>
+              <div class="prompt-desc">Discover high-margin opportunities</div>
+            </div>
+            <div class="prompt-card" onclick="fillPrompt('Create a high-converting Facebook ad creative and copy for a pet grooming product targeting US audiences')">
+              <div class="prompt-icon">📢</div>
+              <div class="prompt-title">Create Facebook Ad</div>
+              <div class="prompt-desc">Full ad creative + targeting strategy</div>
+            </div>
+            <div class="prompt-card" onclick="fillPrompt('Build a complete Shopify store structure for a one-product brand in the fitness niche')">
+              <div class="prompt-icon">🛍️</div>
+              <div class="prompt-title">Generate Shopify Store</div>
+              <div class="prompt-desc">Store layout, pages & apps setup</div>
+            </div>
+            <div class="prompt-card" onclick="fillPrompt('Calculate profit margins for a product costing ₹350, selling at ₹1299, with ₹80 CPO and 40% delivery rate')">
+              <div class="prompt-icon">💰</div>
+              <div class="prompt-title">Calculate Profit</div>
+              <div class="prompt-desc">Full P&L with ROAS & ROI analysis</div>
+            </div>
+            <div class="prompt-card" onclick="fillPrompt('Write a 5-email abandoned cart sequence for a beauty products Shopify store')">
+              <div class="prompt-icon">📧</div>
+              <div class="prompt-title">Generate Email</div>
+              <div class="prompt-desc">Sequences, campaigns & templates</div>
+            </div>
+            <div class="prompt-card" onclick="fillPrompt('Design a high-converting COD landing page structure for a phone accessories product in Pakistan')">
+              <div class="prompt-icon">🎯</div>
+              <div class="prompt-title">Create Landing Page</div>
+              <div class="prompt-desc">Layout, copy & conversion elements</div>
+            </div>
+            <div class="prompt-card" onclick="fillPrompt('Find reliable suppliers for wireless earbuds with fast shipping to UAE and competitive MOQ')">
+              <div class="prompt-icon">🏭</div>
+              <div class="prompt-title">Find Supplier</div>
+              <div class="prompt-desc">Vetted suppliers by region & product</div>
             </div>
           </div>
         </div>
 
-        <div class="prompts">
-          <div class="prompt-card" onclick="fillPrompt('Generate a compelling product description for a trending kitchen gadget targeting Indian COD customers')">
-            <div class="prompt-icon">📝</div>
-            <div class="prompt-title">Generate Product Description</div>
-            <div class="prompt-desc">AI-powered copy for your listings</div>
-          </div>
-          <div class="prompt-card" onclick="fillPrompt('Find winning products with 200%+ margin for Q3 2026 in the home & wellness niche')">
-            <div class="prompt-icon">🏆</div>
-            <div class="prompt-title">Find Winning Product</div>
-            <div class="prompt-desc">Discover high-margin opportunities</div>
-          </div>
-          <div class="prompt-card" onclick="fillPrompt('Create a high-converting Facebook ad creative and copy for a pet grooming product targeting US audiences')">
-            <div class="prompt-icon">📢</div>
-            <div class="prompt-title">Create Facebook Ad</div>
-            <div class="prompt-desc">Full ad creative + targeting strategy</div>
-          </div>
-          <div class="prompt-card" onclick="fillPrompt('Build a complete Shopify store structure for a one-product brand in the fitness niche')">
-            <div class="prompt-icon">🛍️</div>
-            <div class="prompt-title">Generate Shopify Store</div>
-            <div class="prompt-desc">Store layout, pages & apps setup</div>
-          </div>
-          <div class="prompt-card" onclick="fillPrompt('Calculate profit margins for a product costing ₹350, selling at ₹1299, with ₹80 CPO and 40% delivery rate')">
-            <div class="prompt-icon">💰</div>
-            <div class="prompt-title">Calculate Profit</div>
-            <div class="prompt-desc">Full P&L with ROAS & ROI analysis</div>
-          </div>
-          <div class="prompt-card" onclick="fillPrompt('Write a 5-email abandoned cart sequence for a beauty products Shopify store')">
-            <div class="prompt-icon">📧</div>
-            <div class="prompt-title">Generate Email</div>
-            <div class="prompt-desc">Sequences, campaigns & templates</div>
-          </div>
-          <div class="prompt-card" onclick="fillPrompt('Design a high-converting COD landing page structure for a phone accessories product in Pakistan')">
-            <div class="prompt-icon">🎯</div>
-            <div class="prompt-title">Create Landing Page</div>
-            <div class="prompt-desc">Layout, copy & conversion elements</div>
-          </div>
-          <div class="prompt-card" onclick="fillPrompt('Find reliable suppliers for wireless earbuds with fast shipping to UAE and competitive MOQ')">
-            <div class="prompt-icon">🏭</div>
-            <div class="prompt-title">Find Supplier</div>
-            <div class="prompt-desc">Vetted suppliers by region & product</div>
+      </div>
+    </div>
+
+    <div class="input-sticky-area">
+      <div class="input-hero">
+        <div class="input-wrap">
+          <textarea id="mainInput" rows="1" placeholder="Ask anything about dropshipping, ecommerce, Shopify, Meta Ads, products, suppliers or marketing..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+          <div class="input-actions">
+            <div class="input-left">
+              <button class="input-btn" onclick="attachFile()">
+                <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                Attach
+              </button>
+              <button class="input-btn" onclick="uploadImage()">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                Image
+              </button>
+              <button class="input-btn" onclick="voiceInput()">
+                <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                Voice
+              </button>
+            </div>
+            <button class="input-send" onclick="sendMessage()" id="sendBtn">
+              <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -488,10 +526,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <footer class="footer">⚡ DropCalcPro &nbsp;·&nbsp; Your Dropshipping Command Center</footer>
 
 <script>
-// Pointing securely to the root domain of your active Cloudflare Worker
 const WORKER_URL = "https://dropcalcpro-ai.dropcalcpro.workers.dev";
-
-// Persistent memory storage to retain the conversation turns structure natively
 let chatHistory = [];
 
 function autoResize(t){
@@ -512,6 +547,7 @@ async function sendMessage(){
   if(!txt) return;
 
   var body=document.getElementById('chatBody');
+  var wrap=document.getElementById('messagesWrap');
   var welcome=document.getElementById('welcomeScreen');
   
   if(welcome && welcome.style.display !== 'none'){
@@ -520,22 +556,22 @@ async function sendMessage(){
     body.style.paddingTop='1.5rem';
   }
 
-  // Inject User bubble frame
+  // Inject User bubble frame into the dedicated wrap
   var userMsg=document.createElement('div');
   userMsg.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:14px;border-bottom-right-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease;word-break:break-word;';
   userMsg.textContent=txt;
-  body.appendChild(userMsg);
+  wrap.appendChild(userMsg);
 
   // Clear input frame parameters
   inp.value='';
   inp.style.height='auto';
   body.scrollTop=body.scrollHeight;
 
-  // Render Bot Loading block frame
+  // Render Bot Loading block frame into the wrap
   var botMsg=document.createElement('div');
   botMsg.style.cssText='align-self:flex-start;max-width:80%;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:14px;border-bottom-left-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease;';
   botMsg.innerHTML='<strong style="color:var(--blue)">DropAI</strong> is compiling analysis models...';
-  body.appendChild(botMsg);
+  wrap.appendChild(botMsg);
   body.scrollTop=body.scrollHeight;
 
   try {
@@ -554,14 +590,12 @@ async function sendMessage(){
       throw new Error(data.error || `HTTP error! Status: ${response.status}`);
     }
 
-    // Basic markdown replacement rule styles presentation logic
     let formattedResponse = data.reply
       .replace(/\n/g, "<br>")
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      .replace(/\*\*(.*?)\*\"/g, "<strong>$1</strong>");
 
     botMsg.innerHTML = `<strong style="color:var(--blue)">DropAI</strong><br><br>${formattedResponse}`;
 
-    // Append session state history turns to remember context memory baseline arrays
     chatHistory.push({ role: "user", text: txt });
     chatHistory.push({ role: "model", text: data.reply });
 
@@ -576,7 +610,6 @@ async function sendMessage(){
 function fillPrompt(text){
   var inp=document.getElementById('mainInput');
   if(!inp) {
-    // If layout was wiped via newChat, re-initialize baseline elements frame
     newChat();
     inp=document.getElementById('mainInput');
   }
@@ -596,7 +629,16 @@ function voiceInput(){alert('Audio frequency capture channel listener active.');
 function newChat(){
   chatHistory = [];
   var body=document.getElementById('chatBody');
-  body.innerHTML='<div class="welcome" id="welcomeScreen"><div class="welcome-badge"><span class="dot"></span>AI-Powered Intelligence</div><h1>DropCalcPro AI</h1><p class="sub">Your personal ecommerce intelligence platform.</p><div class="input-hero"><div class="input-wrap"><textarea id="mainInput" rows="1" placeholder="Ask anything about dropshipping, ecommerce, Shopify, Meta Ads, products, suppliers or marketing..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea><div class="input-actions"><div class="input-left"><button class="input-btn" onclick="attachFile()"><svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>Attach</button><button class="input-btn" onclick="uploadImage()"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Image</button><button class="input-btn" onclick="voiceInput()"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>Voice</button></div><button class="input-send" onclick="sendMessage()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button></div></div></div><div class="prompts"><div class="prompt-card" onclick="fillPrompt(\'Generate a compelling product description for a trending kitchen gadget targeting Indian COD customers\')"><div class="prompt-icon">📝</div><div class="prompt-title">Generate Product Description</div><div class="prompt-desc">AI-powered copy for your listings</div></div><div class="prompt-card" onclick="fillPrompt(\'Find winning products with 200%+ margin for Q3 2026 in the home & wellness niche\')"><div class="prompt-icon">🏆</div><div class="prompt-title">Find Winning Product</div><div class="prompt-desc">Discover high-margin opportunities</div></div><div class="prompt-card" onclick="fillPrompt(\'Create a high-converting Facebook ad creative and copy for a pet grooming product targeting US audiences\')"><div class="prompt-icon">📢</div><div class="prompt-title">Create Facebook Ad</div><div class="prompt-desc">Full ad creative + targeting strategy</div></div><div class="prompt-card" onclick="fillPrompt(\'Build a complete Shopify store structure for a one-product brand in the fitness niche\')"><div class="prompt-icon">🛍️</div><div class="prompt-title">Generate Shopify Store</div><div class="prompt-desc">Store layout, pages & apps setup</div></div><div class="prompt-card" onclick="fillPrompt(\'Calculate profit margins for a product costing ₹350, selling at ₹1299, with ₹80 CPO and 40% delivery rate\')"><div class="prompt-icon">💰</div><div class="prompt-title">Calculate Profit</div><div class="prompt-desc">Full P&L with ROAS & ROI analysis</div></div><div class="prompt-card" onclick="fillPrompt(\'Write a 5-email abandoned cart sequence for a beauty products Shopify store\')"><div class="prompt-icon">📧</div><div class="prompt-title">Generate Email</div><div class="prompt-desc">Sequences, campaigns & templates</div></div><div class="prompt-card" onclick="fillPrompt(\'Design a high-converting COD landing page structure for a phone accessories product in Pakistan\')"><div class="prompt-icon">🎯</div><div class="prompt-title">Create Landing Page</div><div class="prompt-desc">Layout, copy & conversion elements</div></div><div class="prompt-card" onclick="fillPrompt(\'Find reliable suppliers for wireless earbuds with fast shipping to UAE and competitive MOQ\')"><div class="prompt-icon">🏭</div><div class="prompt-title">Find Supplier</div><div class="prompt-desc">Vetted suppliers by region & product</div></div></div></div>';
+  
+  // Re-render only the internal messages layout area without destroying elements completely
+  body.innerHTML='<div id="messagesWrap"><div class="welcome" id="welcomeScreen"><div class="welcome-badge"><span class="dot"></span>AI-Powered Intelligence</div><h1>DropCalcPro AI</h1><p class="sub">Your personal ecommerce intelligence platform.</p><div class="prompts"><div class="prompt-card" onclick="fillPrompt(\'Generate a compelling product description for a trending kitchen gadget targeting Indian COD customers\')"><div class="prompt-icon">📝</div><div class="prompt-title">Generate Product Description</div><div class="prompt-desc">AI-powered copy for your listings</div></div><div class="prompt-card" onclick="fillPrompt(\'Find winning products with 200%+ margin for Q3 2026 in the home & wellness niche\')"><div class="prompt-icon">🏆</div><div class="prompt-title">Find Winning Product</div><div class="prompt-desc">Discover high-margin opportunities</div></div><div class="prompt-card" onclick="fillPrompt(\'Create a high-converting Facebook ad creative and copy for a pet grooming product targeting US audiences\')"><div class="prompt-icon">📢</div><div class="prompt-title">Create Facebook Ad</div><div class="prompt-desc">Full ad creative + targeting strategy</div></div><div class="prompt-card" onclick="fillPrompt(\'Build a complete Shopify store structure for a one-product brand in the fitness niche\')"><div class="prompt-icon">🛍️</div><div class="prompt-title">Generate Shopify Store</div><div class="prompt-desc">Store layout, pages & apps setup</div></div><div class="prompt-card" onclick="fillPrompt(\'Calculate profit margins for a product costing ₹350, selling at ₹1299, with ₹80 CPO and 40% delivery rate\')"><div class="prompt-icon">💰</div><div class="prompt-title">Calculate Profit</div><div class="prompt-desc">Full P&L with ROAS & ROI analysis</div></div><div class="prompt-card" onclick="fillPrompt(\'Write a 5-email abandoned cart sequence for a beauty products Shopify store\')"><div class="prompt-icon">📧</div><div class="prompt-title">Generate Email</div><div class="prompt-desc">Sequences, campaigns & templates</div></div><div class="prompt-card" onclick="fillPrompt(\'Design a high-converting COD landing page structure for a phone accessories product in Pakistan\')"><div class="prompt-icon">🎯</div><div class="prompt-title">Create Landing Page</div><div class="prompt-desc">Layout, copy & conversion elements</div></div><div class="prompt-card" onclick="fillPrompt(\'Find reliable suppliers for wireless earbuds with fast shipping to UAE and competitive MOQ\')"><div class="prompt-icon">🏭</div><div class="prompt-title">Find Supplier</div><div class="prompt-desc">Vetted suppliers by region & product</div></div></div></div></div>';
+  
+  var inp = document.getElementById('mainInput');
+  if(inp) {
+    inp.value = '';
+    inp.style.height = 'auto';
+  }
+  body.style.justifyContent='center';
   body.scrollTop=0;
 }
 
