@@ -537,6 +537,33 @@ function sendMessage(){
   inp.value='';
   inp.style.height='auto';
   body.scrollTop=body.scrollHeight;
+  var botMsg=document.createElement('div');
+  botMsg.style.cssText='align-self:flex-start;max-width:80%;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:14px;border-bottom-left-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease';
+  botMsg.innerHTML='<strong style="color:var(--blue)">DropAI</strong> is thinking...';
+  body.appendChild(botMsg);
+  body.scrollTop=body.scrollHeight;
+  fetch("https://dropcalcpro-ai.dropcalcpro.workers.dev/chat",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({message:txt,history:[]})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    botMsg.innerHTML=data.reply;
+    body.scrollTop=body.scrollHeight;
+  })
+  .catch(function(){
+    botMsg.innerHTML='<strong style="color:var(--red)">Sorry, something went wrong.</strong>';
+    body.scrollTop=body.scrollHeight;
+  });
+}
+  var userMsg=document.createElement('div');
+  userMsg.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:14px;border-bottom-right-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease';
+  userMsg.textContent=txt;
+  body.appendChild(userMsg);
+  inp.value='';
+  inp.style.height='auto';
+  body.scrollTop=body.scrollHeight;
   setTimeout(function(){
     var botMsg=document.createElement('div');
     botMsg.style.cssText='align-self:flex-start;max-width:80%;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:14px;border-bottom-left-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease';
