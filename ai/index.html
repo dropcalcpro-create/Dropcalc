@@ -557,20 +557,6 @@ function sendMessage(){
     body.scrollTop=body.scrollHeight;
   });
 }
-  var userMsg=document.createElement('div');
-  userMsg.style.cssText='align-self:flex-end;max-width:80%;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:14px;border-bottom-right-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease';
-  userMsg.textContent=txt;
-  body.appendChild(userMsg);
-  inp.value='';
-  inp.style.height='auto';
-  body.scrollTop=body.scrollHeight;
-  setTimeout(function(){
-    var botMsg=document.createElement('div');
-    botMsg.style.cssText='align-self:flex-start;max-width:80%;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:14px;border-bottom-left-radius:4px;padding:.8rem 1rem;font-size:.9rem;line-height:1.55;margin-bottom:.75rem;animation:msgPop .3s ease';
-    botMsg.innerHTML='<strong style="color:var(--blue)">DropAI</strong> is analyzing your request...<br><br><em style="color:var(--dim)">This is a UI demo. Connect your LLM API to enable real responses.</em>';
-    body.appendChild(botMsg);
-    body.scrollTop=body.scrollHeight;
-  },800);
 }
 function fillPrompt(text){
   var inp=document.getElementById('mainInput');
