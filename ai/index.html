@@ -82,12 +82,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 .main::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(79,142,247,.06),transparent 70%);pointer-events:none;z-index:0}
 
-/* CHAT BODY MAIN SCROLL FIX */
-.chat-body{flex:1;overflow-y:auto;padding:2rem 2.5rem 120px;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+/* CHAT PANEL STRUCTURAL ADJUSTMENTS */
+.chat-body{flex:1;overflow-y:auto;padding:2rem 2.5rem 130px;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .chat-body::-webkit-scrollbar{width:4px}
 .chat-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-#messagesWrap { width: 100%; max-width: 720px; display: flex; flex-direction: column; height: 100%; justify-content: center; }
+#messagesWrap { width: 100%; max-width: 720px; display: flex; flex-direction: column; min-height: 100%; justify-content: center; }
 
 .welcome{text-align:center;max-width:680px;width:100%;margin:auto 0;}
 .welcome-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .9rem;border-radius:99px;background:var(--blue-dim);border:1px solid var(--blue-b);font-size:.68rem;font-weight:700;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.5rem;animation:fadeInUp .6s ease both}
@@ -97,8 +97,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .welcome p.sub{font-size:1.05rem;color:var(--dim);margin-bottom:2.5rem;animation:fadeInUp .6s .2s ease both}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-/* FLOATING OVERLAY FIXED INPUT CONFIG */
-.input-sticky-area { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem 2.5rem; display: flex; justify-content: center; background: linear-gradient(to top, var(--bg) 70%, transparent); z-index: 10; pointer-events: none; }
+/* PERSISTENT FLOATING BOX INPUT */
+.input-sticky-area { position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem 2.5rem; display: flex; justify-content: center; background: linear-gradient(to top, var(--bg) 75%, transparent); z-index: 10; pointer-events: none; }
 .input-hero{width:100%;max-width:720px;pointer-events: auto;}
 
 .input-wrap{background:var(--glass);border:1.5px solid var(--glass-border);border-radius:18px;padding:1.1rem 1.3rem;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04);transition:all .3s cubic-bezier(.4,0,.2,1)}
@@ -140,23 +140,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .qa-name{font-size:.78rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .qa-desc{font-size:.62rem;color:var(--muted)}
 
-.features{width:100%;padding:1.5rem 2.5rem;background:linear-gradient(180deg,transparent,rgba(79,142,247,.03));border-top:1px solid var(--border);position:relative;z-index:1}
-.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:1200px;margin:0 auto}
-@media(max-width:1100px){.features-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.features-grid{grid-template-columns:1fr}}
-
-.feat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem;position:relative;overflow:hidden;transition:all .3s}
-.feat-card:hover{border-color:var(--blue-b);transform:translateY(-3px);box-shadow:0 12px 40px rgba(79,142,247,.08)}
-.feat-card::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;opacity:.04;filter:blur(30px);pointer-events:none}
-.feat-card:nth-child(1)::after{background:var(--blue)}
-.feat-card:nth-child(2)::after{background:var(--green)}
-.feat-card:nth-child(3)::after{background:var(--violet)}
-.feat-card:nth-child(4)::after{background:var(--orange)}
-.feat-icon{font-size:1.6rem;margin-bottom:.6rem}
-.feat-title{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.25rem}
-.feat-desc{font-size:.72rem;color:var(--dim);line-height:1.5}
-
-.footer{text-align:center;padding:1.25rem 1rem;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;letter-spacing:.02em}
+.footer{text-align:center;padding:1.25rem 1rem;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;letter-spacing:.02em;position:relative;z-index:5;background:var(--bg)}
 
 @media(max-width:1200px){
   .rpanel{display:none}
@@ -166,7 +150,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   .sidebar{position:fixed;left:0;top:64px;bottom:0;transform:translateX(-100%);transition:transform .3s;z-index:99}
   .sidebar.open{transform:translateX(0)}
   .chat-body{padding:1.5rem 1rem 120px}
-  .features{padding:1rem}
   .prompts{grid-template-columns:1fr 1fr}
   .input-sticky-area { padding: 1rem; }
 }
@@ -395,31 +378,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
               <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
             </button>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="features">
-      <div class="features-grid">
-        <div class="feat-card">
-          <div class="feat-icon">🧠</div>
-          <div class="feat-title">Multi-Agent Intelligence</div>
-          <div class="feat-desc">8 specialized AI agents working together — from product research to ad optimization, all in one unified platform.</div>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon">⚡</div>
-          <div class="feat-title">Real-Time Analytics</div>
-          <div class="feat-desc">Live profit calculations, ROAS tracking, and delivery rate monitoring with instant actionable insights.</div>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon">🌍</div>
-          <div class="feat-title">Global Market Intelligence</div>
-          <div class="feat-desc">Country-specific strategies for India, Pakistan, UAE, USA & Bangladesh with localized payment & logistics data.</div>
-        </div>
-        <div class="feat-card">
-          <div class="feat-icon">🔒</div>
-          <div class="feat-title">Enterprise-Grade Security</div>
-          <div class="feat-desc">End-to-end encrypted conversations, secure API key management, and zero data retention policy.</div>
         </div>
       </div>
     </div>
